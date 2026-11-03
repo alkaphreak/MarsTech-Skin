@@ -1,0 +1,5 @@
+# .aiignore - paths AI tools skip during automatic context scanning
+private/
+archive/
+.local/
+.env

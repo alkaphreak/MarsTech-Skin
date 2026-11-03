@@ -1,0 +1,35 @@
+/* MarsTech-Skin/marstech.css
+ * MarsTech brand extensions on top of tokens.css: tokens outside the Open Design schema,
+ * and the signature treatments (clipped corners, corner ticks, mono labels).
+ * Load after tokens.css.
+ */
+
+:root {
+  --mt-link: #ff6aa8;        /* links: neon pink, 7.6:1 on --bg */
+  --mt-link-hover: #ff9cc6;
+  --mt-clip: 10px;           /* size of the 45 degree clipped corner */
+  --mt-label-tracking: 0.12em;
+}
+
+a { color: var(--mt-link); text-underline-offset: 3px; }
+a:hover { color: var(--mt-link-hover); }
+:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* Clipped corners: top-right and bottom-left, for cards, panels and buttons */
+.mt-clip {
+  clip-path: polygon(0 0, calc(100% - var(--mt-clip)) 0, 100% var(--mt-clip),
+                     100% 100%, var(--mt-clip) 100%, 0 calc(100% - var(--mt-clip)));
+}
+
+/* Small uppercase mono label above a block ("RACCOURCIR UN LIEN") */
+.mt-label {
+  font: var(--text-xs) / 1 var(--font-mono);
+  letter-spacing: var(--mt-label-tracking);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* No glow, no scanlines by default; motion stays minimal */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+}
