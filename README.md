@@ -8,6 +8,16 @@ Firefox popup.
 Direction "Glacier néon": retro-futurist neon noir, ice blue and silver on blue-black, neon pink links,
 clipped corners, no glow. Inspired by Ghost in the Shell, Blade Runner and the HUD screens of the Alien films.
 
+![MarsTech-Skin specimen: sol4.space header, link shortener, Taskwarrior popup list, CV header, colors and type](docs/images/overview.png)
+
+The specimen is `docs/preview/specimen.html`. To refresh the image after a token change:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+  --virtual-time-budget=8000 --force-device-scale-factor=2 --window-size=1280,960 \
+  --screenshot="$PWD/docs/images/overview.png" "file://$PWD/docs/preview/specimen.html"
+```
+
 ## Files
 
 | File           | Role                                                                  |
