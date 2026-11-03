@@ -17,9 +17,10 @@
 ```
 MarsTech-Skin/
 ├── tokens.css      # Source of truth for values, exactly the Open Design schema tokens
-├── marstech.css    # Brand extensions outside the schema (--mt-*), .mt-clip, .mt-label
+├── marstech.css    # Brand extensions (--mt-*) and base components (.btn, .input, .panel, ...)
 ├── DESIGN.md       # Rules: color roles, typography, components, anti-patterns
-└── docs/adr/       # Design decisions (MADR)
+├── prototypes/     # Validated Open Design prototypes (sol4.space, CV, popup); the visual reference
+└── docs/           # adr/ (MADR), images/ (README captures), preview/specimen.html
 ```
 
 **Consumers**: marstech-link-spray (sol4.space, MLS-250), MarsTech-CV-Website, Taskwarrior-Connector
@@ -39,6 +40,11 @@ the direction; record a new decision there, not only in the ticket.
 - At most two visible uses of `--accent` per screen; pink (`--mt-link`) is for links only.
 - Dark only, no glow, no scanlines, no rounded corners mixed with clipped ones (see `DESIGN.md` §9).
 - Fonts are OFL: when woff2 files are added, ship each font's license file next to it.
+- Open Design: an import rewrites `DESIGN.md` (even `verbatim`), so put ours back afterwards. Its
+  generated `skin.css` drifts from `marstech.css` (corner direction, names): after a prototyping
+  session, diff it and port the validated changes into `marstech.css`, keeping the `--mt-` prefix.
+  Project data: `~/Library/Application Support/Open Design/namespaces/release-stable-intel/data/`.
+- Regenerate the README captures with the Chrome command in `README.md` after a CSS change.
 
 ---
 
