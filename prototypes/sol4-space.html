@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>sol4.space · Marstech - Link Spray</title>
+<!-- Preview only: real projects serve the fonts locally (DESIGN.md §3). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=block" />
+<link rel="stylesheet" href="od-layout.css" />
+<link rel="stylesheet" href="../tokens.css" />
+<link rel="stylesheet" href="../marstech.css" />
+<style>
+  .mt-header { position: sticky; top: 0; z-index: 10; background: var(--bg); }
+  .mt-header .wrap { flex-wrap: wrap; }
+  .menu { border-bottom: 1px solid var(--border-soft); background: var(--bg); }
+  .menu .od-rail { --od-rail-pad: 16px; --od-gap: 0; max-width: var(--container-max); margin: 0 auto; }
+  @media (min-width: 768px) { .menu .od-rail { --od-rail-pad: 32px; } }
+  .menu a { font: var(--text-xs)/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg-2); text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; padding-inline: var(--space-3); border-bottom: 1px solid transparent; transition: color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard); }
+  @media (hover: hover) { .menu a:hover { color: var(--fg); border-bottom-color: var(--border); } }
+  .menu a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
+
+  main { padding-block: var(--section-y-phone); min-height: 70vh; }
+  @media (min-width: 1024px) { main { padding-block: 56px var(--section-y-phone); } }
+  .view-head { max-width: 720px; margin-bottom: var(--space-8); }
+  .view-head h1 { font-size: clamp(var(--text-2xl), 5vw, var(--text-3xl)); text-transform: uppercase; margin-top: var(--space-3); }
+  .view-head p { color: var(--fg-2); margin-top: var(--space-3); max-width: 65ch; }
+  .home-head h1 { font-size: clamp(var(--text-3xl), 7vw, var(--text-4xl)); }
+
+  .tool { display: grid; gap: var(--space-6); }
+  @media (min-width: 1024px) { .tool.split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } }
+  .panel.form { padding: var(--space-6) var(--space-4); display: grid; gap: var(--space-5); align-content: start; }
+  @media (min-width: 768px) { .panel.form { padding: var(--space-6); } }
+  textarea.input { padding: var(--space-3); min-height: 140px; resize: vertical; line-height: 1.6; }
+  select.input { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--fg-2) 50%), linear-gradient(135deg, var(--fg-2) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 36px; }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .grid-2 { display: grid; gap: var(--space-4); }
+  @media (min-width: 768px) { .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+  .result { padding: var(--space-4); background: var(--surface-warm); border: 1px solid var(--border); display: grid; gap: var(--space-3); align-content: start; }
+  .result-head { display: flex; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  .big { font: 600 var(--text-lg)/1.4 var(--font-mono); overflow-wrap: anywhere; color: var(--fg); }
+  a.big { color: var(--mt-link); }
+  .mono-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+  .mono-list li { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--border); font: var(--text-sm)/1.4 var(--font-mono); }
+  .mono-list li > :first-child { min-width: 0; }
+  .kv { display: grid; grid-template-columns: minmax(0, 160px) minmax(0, 1fr); gap: 0; border-top: 1px solid var(--border); font: var(--text-sm)/1.5 var(--font-mono); }
+  .kv dt, .kv dd { margin: 0; padding: var(--space-2) 0; border-bottom: 1px solid var(--border); }
+  .kv dt { color: var(--muted); padding-right: var(--space-3); }
+  .kv dd { overflow-wrap: anywhere; }
+  .sample { color: var(--warn); }
+  pre.code { margin: 0; background: var(--surface-warm); border: 1px solid var(--border); padding: var(--space-3); font: 12.5px/1.6 var(--font-mono); white-space: pre-wrap; overflow-wrap: anywhere; color: var(--fg); }
+  .empty-note { color: var(--muted); font-size: var(--text-sm); }
+
+  .tools { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .tool-card { display: grid; gap: var(--space-2); padding: var(--space-4); background: var(--surface); border: 1px solid var(--border); color: var(--fg); text-decoration: none; transition: border-color var(--motion-fast) var(--ease-standard); }
+  .tool-card strong { font: 600 var(--text-base)/1.2 var(--font-display); letter-spacing: var(--tracking-display); text-transform: uppercase; }
+  .tool-card span { color: var(--fg-2); font-size: var(--text-sm); }
+  @media (hover: hover) { .tool-card:hover { border-color: var(--accent); } }
+  .tool-card.is-main { border-color: var(--accent); }
+
+  .qr-box { width: 200px; aspect-ratio: 1; border: 1px dashed var(--border); display: grid; place-items: center; text-align: center; padding: var(--space-4); color: var(--muted); font: var(--text-xs)/1.5 var(--font-mono); }
+
+  footer.mt-foot { border-top: 1px solid var(--border-soft); padding-block: var(--space-6); }
+  footer.mt-foot .wrap { display: flex; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  footer.mt-foot a { display: inline-flex; align-items: center; min-height: 44px; }
+</style>
+</head>
+<body>
+<header class="mt-header">
+  <div class="wrap">
+    <a class="mt-brand" href="#index" data-go="index">sol4<span class="dot">.</span>space</a>
+    <nav class="mt-nav" aria-label="Secondary">
+      <a href="#dashboard" data-go="dashboard">Dashboard</a>
+      <a href="#abuse" data-go="abuse">Abuse</a>
+    </nav>
+  </div>
+  <nav class="menu" aria-label="Tools">
+    <div class="od-rail" id="menu"></div>
+  </nav>
+</header>
+
+<main class="wrap" id="main" tabindex="-1">
+
+  <!-- HOME -->
+  <section data-view="index" aria-labelledby="h-index">
+    <div class="view-head home-head">
+      <span class="mt-label">Marstech - Link Spray</span>
+      <h1 id="h-index">Open multiple URLs in one click.</h1>
+      <p>Shorten URLs, share pastes, generate ids and many more. From Marstech for public use.</p>
+      <div class="actions" style="margin-top: var(--space-6)">
+        <a class="btn btn-primary mt-clip" href="#spray" data-go="spray">Start a spray</a>
+        <a class="btn btn-secondary" href="#shortener" data-go="shortener">Shorten a URL</a>
+      </div>
+    </div>
+    <span class="mt-label" style="margin-bottom: var(--space-3)">Tools</span>
+    <div class="tools" id="tool-grid"></div>
+  </section>
+
+  <!-- SPRAY -->
+  <section data-view="spray" aria-labelledby="h-spray" hidden>
+    <div class="view-head"><span class="mt-label">GET /api/spray</span><h1 id="h-spray">Open multiple URLs at once</h1><p>To open multiple URLs in one click, follow a few simple steps: paste your links, generate the spray URL, share it.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div>
+          <label class="field-label" for="spray-links">Links <span aria-hidden="true">*</span></label>
+          <textarea class="input" id="spray-links" rows="6" spellcheck="false" aria-describedby="spray-help spray-error" placeholder="https://cv.marstech.fr/&#10;https://github.com/alkaphreak"></textarea>
+          <p class="field-help" id="spray-help">Fill in the URLs you wish to open, one URL by line.</p>
+          <p class="field-error" id="spray-error" hidden></p>
+        </div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="spray-go" type="button">Generate URL</button><button class="btn btn-secondary" id="spray-clear" type="button">Clear</button></div>
+      </div>
+      <div>
+        <p class="empty-note" id="spray-empty">Please provide some URLs in the text area. The generated URL appears here.</p>
+        <div class="result" id="spray-result" hidden aria-live="polite">
+          <div class="result-head"><span class="status status-ok">201 Created</span><span class="mt-meta" id="spray-count"></span></div>
+          <span class="mt-label">Generated URL</span>
+          <a class="big" id="spray-url" href="#" target="_blank" rel="noopener"></a>
+          <div class="actions"><button class="btn btn-primary mt-clip" data-copy="spray-url" type="button">Copy</button><button class="btn btn-secondary" id="spray-shorten" type="button">Shorten Spray</button></div>
+          <div id="spray-short-wrap" hidden><span class="mt-label">The spray link has been shortened</span><a class="big" id="spray-short" href="#" target="_blank" rel="noopener"></a></div>
+          <span class="mt-label" style="margin-top: var(--space-2)">Urls to open</span>
+          <ul class="mono-list" id="spray-list"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHORTENER -->
+  <section data-view="shortener" aria-labelledby="h-short" hidden>
+    <div class="view-head"><span class="mt-label">GET /api/url-shortener/shorten</span><h1 id="h-short">Shorten URL</h1><p>Shorten a long URL. The short code redirects to the original target.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div>
+          <label class="field-label" for="short-in">Target link <span aria-hidden="true">*</span></label>
+          <input class="input" id="short-in" type="url" inputmode="url" maxlength="2048" autocomplete="off" placeholder="Enter target link to shorten" aria-describedby="short-error" />
+          <p class="field-error" id="short-error" hidden></p>
+        </div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="short-go" type="button">Get shortened link</button></div>
+      </div>
+      <div>
+        <p class="empty-note" id="short-empty">Your shortened link appears here.</p>
+        <div class="result" id="short-result" hidden aria-live="polite">
+          <div class="result-head"><span class="status status-ok">201 Created</span><span class="mt-meta od-truncate" id="short-target"></span></div>
+          <span class="mt-label">Shortened link</span>
+          <a class="big" id="short-out" href="#" target="_blank" rel="noopener"></a>
+          <div class="actions"><button class="btn btn-primary mt-clip" data-copy="short-out" type="button">Copy shortened link</button><a class="btn btn-secondary" href="#qr" data-go="qr" data-qr-from="short-out">QR code</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UUID -->
+  <section data-view="uuid" aria-labelledby="h-uuid" hidden>
+    <div class="view-head"><span class="mt-label">GET /api/uuid</span><h1 id="h-uuid">UUID generator</h1><p>Random version 4 UUIDs, generated on demand.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div><label class="field-label" for="uuid-n">How many</label><select class="input" id="uuid-n"><option>1</option><option>5</option><option>10</option></select></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="uuid-go" type="button">Generate</button></div>
+      </div>
+      <div class="result" aria-live="polite"><div class="result-head"><span class="mt-label">Result</span><button class="btn btn-ghost" id="uuid-copy" type="button">Copy all</button></div><ul class="mono-list" id="uuid-list"></ul></div>
+    </div>
+  </section>
+
+  <!-- RANDOM -->
+  <section data-view="random" aria-labelledby="h-random" hidden>
+    <div class="view-head"><span class="mt-label">GET /api/random</span><h1 id="h-random">Random number</h1><p>Generate a random integer within a configurable range, bounds included.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div class="grid-2">
+          <div><label class="field-label" for="rnd-min">Min</label><input class="input" id="rnd-min" type="number" value="1" /></div>
+          <div><label class="field-label" for="rnd-max">Max</label><input class="input" id="rnd-max" type="number" value="100" /></div>
+        </div>
+        <p class="field-error" id="rnd-error" hidden></p>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="rnd-go" type="button">Generate</button></div>
+      </div>
+      <div class="result" aria-live="polite"><span class="mt-label" id="rnd-range">Result</span><span class="big" id="rnd-out" style="font-size: clamp(var(--text-3xl), 8vw, var(--text-4xl)); font-family: var(--font-display)">–</span><span class="mt-meta" id="rnd-hist"></span></div>
+    </div>
+  </section>
+
+  <!-- PASTE -->
+  <section data-view="paste" aria-labelledby="h-paste" hidden>
+    <div class="view-head"><span class="mt-label">POST /api/paste</span><h1 id="h-paste">Pastebin</h1><p>Here is a Pastebin like. Share a text by URL, optionally protected by a password.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div>
+          <label class="field-label" for="paste-in">Your text here <span aria-hidden="true">*</span></label>
+          <textarea class="input" id="paste-in" rows="10" spellcheck="false" aria-describedby="paste-error"></textarea>
+          <p class="field-error" id="paste-error" hidden></p>
+        </div>
+        <div><label class="field-label" for="paste-pw">Password (optional)</label><input class="input" id="paste-pw" type="password" autocomplete="new-password" aria-describedby="paste-pw-help" /><p class="field-help" id="paste-pw-help">Readers will need it to open the paste.</p></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="paste-go" type="button">Submit</button></div>
+      </div>
+      <div>
+        <p class="empty-note" id="paste-empty">Your paste ID and URL appear here.</p>
+        <div class="result" id="paste-result" hidden aria-live="polite">
+          <div class="result-head"><span class="status status-ok">201 Created</span><span class="mt-meta" id="paste-lock"></span></div>
+          <span class="mt-label">Your paste ID is</span><span class="big" id="paste-id"></span>
+          <span class="mt-label">Your paste URL is</span><a class="big" id="paste-url" href="#" target="_blank" rel="noopener"></a>
+          <div class="actions"><button class="btn btn-primary mt-clip" data-copy="paste-url" type="button">Copy my paste URL</button><button class="btn btn-secondary" id="paste-raw" type="button">Raw</button><a class="btn btn-secondary" href="#qr" data-go="qr" data-qr-from="paste-url">QR code</a></div>
+          <span class="mt-label">Your paste</span><pre class="code" id="paste-show"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QR -->
+  <section data-view="qr" aria-labelledby="h-qr" hidden>
+    <div class="view-head"><span class="mt-label">GET /api/qr</span><h1 id="h-qr">QR code</h1><p>Turn any text or link into a QR code image.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div><label class="field-label" for="qr-in">Text or URL <span aria-hidden="true">*</span></label><input class="input" id="qr-in" type="text" autocomplete="off" aria-describedby="qr-error" /><p class="field-error" id="qr-error" hidden></p></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="qr-go" type="button">Generate QR code</button></div>
+      </div>
+      <div class="result" id="qr-result" hidden aria-live="polite">
+        <span class="mt-label sample">Sample response · image rendered by the server</span>
+        <div class="qr-box" role="img" aria-label="QR code placeholder">PNG 256×256<br>from /api/qr</div>
+        <span class="mt-meta od-truncate" id="qr-api"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAILTO -->
+  <section data-view="mailto" aria-labelledby="h-mailto" hidden>
+    <div class="view-head"><span class="mt-label">Mailto</span><h1 id="h-mailto">Mailto link builder</h1><p>Build a mailto: link with recipient, subject and body already filled.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div><label class="field-label" for="mt-to">To <span aria-hidden="true">*</span></label><input class="input" id="mt-to" type="email" autocomplete="off" aria-describedby="mt-error" /><p class="field-error" id="mt-error" hidden></p></div>
+        <div><label class="field-label" for="mt-subject">Subject</label><input class="input" id="mt-subject" type="text" autocomplete="off" /></div>
+        <div><label class="field-label" for="mt-body">Body</label><textarea class="input" id="mt-body" rows="4"></textarea></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="mt-go" type="button">Build link</button></div>
+      </div>
+      <div>
+        <p class="empty-note" id="mt-empty">The mailto: link appears here.</p>
+        <div class="result" id="mt-result" hidden aria-live="polite"><span class="mt-label">Mailto link</span><a class="big" id="mt-out" href="#"></a><div class="actions"><button class="btn btn-primary mt-clip" data-copy="mt-out" type="button">Copy</button></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DNS -->
+  <section data-view="dns" aria-labelledby="h-dns" hidden>
+    <div class="view-head"><span class="mt-label">DNS</span><h1 id="h-dns">DNS lookup</h1><p>Query the DNS records of a domain.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div><label class="field-label" for="dns-in">Domain <span aria-hidden="true">*</span></label><input class="input" id="dns-in" type="text" autocomplete="off" spellcheck="false" placeholder="example.com" aria-describedby="dns-error" /><p class="field-error" id="dns-error" hidden></p></div>
+        <div><label class="field-label" for="dns-type">Record type</label><select class="input" id="dns-type"><option>A</option><option>AAAA</option><option>MX</option><option>TXT</option><option>NS</option><option>CNAME</option></select></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="dns-go" type="button">Lookup</button></div>
+      </div>
+      <div class="result" id="dns-result" hidden aria-live="polite"><span class="mt-label sample">Sample response · not a real lookup</span><dl class="kv" id="dns-out"></dl></div>
+    </div>
+  </section>
+
+  <!-- IP -->
+  <section data-view="ip" aria-labelledby="h-ip" hidden>
+    <div class="view-head"><span class="mt-label">IP</span><h1 id="h-ip">What is my IP</h1><p>The public address and headers the server sees for your request.</p></div>
+    <div class="result">
+      <span class="mt-label sample">Sample response · documentation address, the server fills the real one</span>
+      <span class="big" style="font-size: var(--text-2xl)">203.0.113.42</span>
+      <dl class="kv" id="ip-out"></dl>
+    </div>
+  </section>
+
+  <!-- OCR -->
+  <section data-view="ocr" aria-labelledby="h-ocr" hidden>
+    <div class="view-head"><span class="mt-label">OCR</span><h1 id="h-ocr">Image to text</h1><p>Upload an image, get its text back.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form">
+        <div><label class="field-label" for="ocr-in">Image <span aria-hidden="true">*</span></label><input class="input" id="ocr-in" type="file" accept="image/png,image/jpeg,image/webp" style="padding-block: 10px" aria-describedby="ocr-help ocr-error" /><p class="field-help" id="ocr-help">PNG, JPEG or WebP.</p><p class="field-error" id="ocr-error" hidden></p></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="ocr-go" type="button">Extract text</button></div>
+      </div>
+      <div class="result" id="ocr-result" hidden aria-live="polite"><span class="mt-label sample">Sample response · the server runs the OCR</span><span class="mt-meta" id="ocr-file"></span><pre class="code">[extracted text appears here]</pre></div>
+    </div>
+  </section>
+
+  <!-- FINGERPRINT -->
+  <section data-view="fingerprint" aria-labelledby="h-fp" hidden>
+    <div class="view-head"><span class="mt-label">Fingerprint</span><h1 id="h-fp">Browser fingerprint</h1><p>What your browser exposes to any site you visit. Read live from this browser.</p></div>
+    <div class="result"><div class="result-head"><span class="status status-ok">read from navigator</span><button class="btn btn-ghost" id="fp-copy" type="button">Copy as JSON</button></div><dl class="kv" id="fp-out"></dl></div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section data-view="dashboard" aria-labelledby="h-dash" hidden>
+    <div class="view-head"><span class="mt-label">POST /api/dashboard</span><h1 id="h-dash">Dashboard</h1><p>Group your links in a personal dashboard you can reopen by its ID.</p></div>
+    <div class="tool split" id="dash-create">
+      <div class="panel mt-clip form">
+        <div><label class="field-label" for="dash-name">Dashboard name <span aria-hidden="true">*</span></label><input class="input" id="dash-name" type="text" autocomplete="off" placeholder="Enter dashboard name" aria-describedby="dash-error" /><p class="field-error" id="dash-error" hidden></p></div>
+        <div><label class="field-label" for="dash-desc">Dashboard description</label><input class="input" id="dash-desc" type="text" autocomplete="off" /></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="dash-go" type="button">Create</button></div>
+      </div>
+      <p class="empty-note">No dashboard yet. Create one to start collecting links.</p>
+    </div>
+    <div class="tool split" id="dash-view" hidden>
+      <div class="panel mt-clip form">
+        <div><span class="mt-label">Name</span><h2 id="dash-title" style="font-size: var(--text-xl); margin-top: var(--space-2)"></h2><p class="empty-note" id="dash-sub" style="margin-top: var(--space-2)"></p><span class="mt-meta" id="dash-id"></span></div>
+        <div><label class="field-label" for="dl-title">Link title</label><input class="input" id="dl-title" type="text" autocomplete="off" /></div>
+        <div><label class="field-label" for="dl-url">Link URL <span aria-hidden="true">*</span></label><input class="input" id="dl-url" type="url" inputmode="url" autocomplete="off" aria-describedby="dl-error" /><p class="field-error" id="dl-error" hidden></p></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="dl-add" type="button">Add link</button><button class="btn btn-secondary" id="dash-spray" type="button">Spray all</button></div>
+      </div>
+      <div>
+        <span class="mt-label">Links · <span id="dl-count">0</span></span>
+        <ul class="mono-list" id="dl-list" style="margin-top: var(--space-3)"></ul>
+        <p class="empty-note" id="dl-empty" style="margin-top: var(--space-3)">This dashboard is empty. Add a first link.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABUSE -->
+  <section data-view="abuse" aria-labelledby="h-abuse" hidden>
+    <div class="view-head"><span class="mt-label">Abuse</span><h1 id="h-abuse">Report an abusive link</h1><p>Phishing, malware or illegal content behind a sol4.space link? Tell us, we review every report.</p></div>
+    <div class="tool split">
+      <div class="panel mt-clip form" id="abuse-form">
+        <div><label class="field-label" for="ab-url">Reported link <span aria-hidden="true">*</span></label><input class="input" id="ab-url" type="url" inputmode="url" autocomplete="off" placeholder="https://sol4.space/…" aria-describedby="ab-url-error" /><p class="field-error" id="ab-url-error" hidden></p></div>
+        <div><label class="field-label" for="ab-reason">Reason</label><select class="input" id="ab-reason"><option>Phishing</option><option>Malware</option><option>Spam</option><option>Illegal content</option><option>Other</option></select></div>
+        <div><label class="field-label" for="ab-details">Details</label><textarea class="input" id="ab-details" rows="4"></textarea></div>
+        <div><label class="field-label" for="ab-mail">Your email (optional)</label><input class="input" id="ab-mail" type="email" autocomplete="email" aria-describedby="ab-mail-error" /><p class="field-error" id="ab-mail-error" hidden></p></div>
+        <div class="actions"><button class="btn btn-primary mt-clip" id="ab-go" type="button">Send report</button></div>
+      </div>
+      <div class="result" id="ab-result" hidden aria-live="polite"><span class="status status-ok">202 Accepted</span><p>Report received for <code id="ab-echo"></code>. The link stays active until reviewed.</p><div class="actions"><button class="btn btn-secondary" id="ab-again" type="button">Report another link</button></div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="mt-foot">
+  <div class="wrap">
+    <a href="https://github.com/alkaphreak/marstech-link-spray" target="_blank" rel="noopener">github/marstech-link-spray</a>
+    <span class="mt-meta">Prototype · <a href="index.html">all prototypes</a> · no data leaves this browser</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(() => {
+  const HOST = 'sol4.space/';
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const genId = (n = 6) => { const c = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from({ length: n }, () => c[Math.floor(Math.random() * c.length)]).join(''); };
+  const isUrl = (v) => { try { const u = new URL(v); return /^https?:$/.test(u.protocol); } catch { return false; } };
+  const onEnter = (inputs, fn) => inputs.forEach(i => $(i).addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') { e.preventDefault(); fn(); } }));
+  function err(inputId, errId, msg) {
+    const i = $(inputId), e = $(errId);
+    if (msg) { e.textContent = msg; e.hidden = false; i && i.setAttribute('aria-invalid', 'true'); }
+    else { e.hidden = true; e.textContent = ''; i && i.removeAttribute('aria-invalid'); }
+    return !msg;
+  }
+  function busy(btn, label, fn) { const t = btn.textContent; btn.disabled = true; btn.textContent = label; setTimeout(() => { fn(); btn.disabled = false; btn.textContent = t; }, 350); }
+  let toastT;
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 1800); }
+  async function copy(text) { try { await navigator.clipboard.writeText(text); toast('Copied: ' + text); } catch { toast('Copy blocked by the browser: ' + text); } }
+  function setLink(id, href, text) { const a = $(id); a.href = href; a.textContent = text; }
+
+  let store;
+  try { store = JSON.parse(localStorage.getItem('mls-proto') || 'null'); } catch { store = null; }
+  store = store || { dashboard: null };
+  const save = () => { try { localStorage.setItem('mls-proto', JSON.stringify(store)); } catch { /* in-memory fallback */ } };
+
+  // ---------- Routing ----------
+  const tools = [
+    ['spray', 'Spray', 'Open many links from one link.'],
+    ['shortener', 'Shortener', 'Shorten a long URL.'],
+    ['uuid', 'Uuid', 'Random v4 UUIDs.'],
+    ['random', 'Random', 'A random number in a range.'],
+    ['paste', 'Pastebin', 'Share text by URL, with optional password.'],
+    ['qr', 'QR Code', 'Text or link to QR image.'],
+    ['mailto', 'Mailto', 'Prefilled mailto: links.'],
+    ['dns', 'DNS', 'Look up DNS records.'],
+    ['ip', 'IP', 'Your public IP and headers.'],
+    ['ocr', 'OCR', 'Text out of an image.'],
+    ['fingerprint', 'Fingerprint', 'What your browser exposes.']
+  ];
+  $('menu').innerHTML = tools.map(([v, l]) => `<a href="#${v}" data-go="${v}">${esc(l)}</a>`).join('');
+  $('tool-grid').innerHTML = tools.map(([v, l, d], i) => `<a class="tool-card mt-clip${i === 0 ? ' is-main' : ''}" href="#${v}" data-go="${v}"><strong>${esc(l)}</strong><span>${esc(d)}</span></a>`).join('');
+  const views = [...document.querySelectorAll('[data-view]')];
+
+  function go(view, focus = true) {
+    if (!views.some(v => v.dataset.view === view)) view = 'index';
+    views.forEach(v => { v.hidden = v.dataset.view !== view; });
+    document.querySelectorAll('[data-go]').forEach(a => {
+      if (a.closest('.menu') || a.closest('.mt-nav')) a.setAttribute('aria-current', a.dataset.go === view ? 'page' : 'false');
+    });
+    const cur = document.querySelector(`.menu [data-go="${view}"]`);
+    if (cur) cur.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    if (view === 'fingerprint') renderFp();
+    if (view === 'ip') renderIp();
+    if (view === 'dashboard') renderDash();
+    window.scrollTo(0, 0);
+    if (focus) { const h = document.querySelector(`[data-view="${view}"] h1`); h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+    try { history.replaceState(null, '', '#' + view); } catch { /* sandbox */ }
+  }
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-go]');
+    if (!a) return;
+    e.preventDefault();
+    if (a.dataset.qrFrom) $('qr-in').value = $(a.dataset.qrFrom).textContent;
+    go(a.dataset.go);
+    if (a.dataset.qrFrom) qrGo();
+  });
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-copy]'); if (b) copy($(b.dataset.copy).textContent); });
+
+  // ---------- Spray ----------
+  let sprayUrls = [];
+  function sprayGo() {
+    const lines = $('spray-links').value.split('\n').map(s => s.trim()).filter(Boolean);
+    if (!lines.length) { err('spray-links', 'spray-error', 'Please enter at least one URL before submitting.'); $('spray-links').focus(); return; }
+    const bad = lines.map((l, i) => [l, i + 1]).filter(([l]) => !isUrl(l));
+    if (bad.length) { err('spray-links', 'spray-error', `Line ${bad.map(b => b[1]).join(', ')}: not a valid http(s) URL.`); $('spray-links').focus(); return; }
+    err('spray-links', 'spray-error', '');
+    busy($('spray-go'), 'Generating…', () => {
+      sprayUrls = lines;
+      const id = genId(8);
+      setLink('spray-url', 'https://' + HOST + 'spray/' + id, HOST + 'spray/' + id);
+      $('spray-count').textContent = `${lines.length} URL${lines.length > 1 ? 's' : ''}`;
+      $('spray-list').innerHTML = lines.map(l => `<li><a class="od-truncate" href="${esc(l)}" target="_blank" rel="noopener">${esc(l)}</a></li>`).join('');
+      $('spray-short-wrap').hidden = true; $('spray-shorten').disabled = false;
+      $('spray-result').hidden = false; $('spray-empty').hidden = true;
+      $('spray-url').focus();
+    });
+  }
+  $('spray-go').addEventListener('click', sprayGo);
+  $('spray-clear').addEventListener('click', () => { $('spray-links').value = ''; err('spray-links', 'spray-error', ''); $('spray-result').hidden = true; $('spray-empty').hidden = false; $('spray-links').focus(); });
+  $('spray-shorten').addEventListener('click', () => busy($('spray-shorten'), 'Shortening…', () => {
+    const id = genId(5); setLink('spray-short', 'https://' + HOST + id, HOST + id);
+    $('spray-short-wrap').hidden = false; $('spray-shorten').disabled = true; $('spray-short').focus();
+  }));
+
+  // ---------- Shortener ----------
+  function checkShort() {
+    const v = $('short-in').value.trim();
+    if (!v) return err('short-in', 'short-error', 'Please enter a URL before submitting.');
+    if (!isUrl(v)) return err('short-in', 'short-error', 'Not a valid URL: it must start with http:// or https://.');
+    if (new URL(v).hostname === 'sol4.space') return err('short-in', 'short-error', 'This is already a sol4.space link.');
+    return err('short-in', 'short-error', '');
+  }
+  function shortGo() {
+    if (!checkShort()) { $('short-in').focus(); return; }
+    busy($('short-go'), 'Shortening…', () => {
+      const id = genId(5);
+      setLink('short-out', 'https://' + HOST + id, HOST + id);
+      $('short-target').textContent = '→ ' + $('short-in').value.trim();
+      $('short-result').hidden = false; $('short-empty').hidden = true; $('short-out').focus();
+    });
+  }
+  $('short-go').addEventListener('click', shortGo); onEnter(['short-in'], shortGo);
+  $('short-in').addEventListener('blur', () => { if ($('short-in').value.trim()) checkShort(); });
+
+  // ---------- UUID ----------
+  const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); }));
+  function uuidGo() {
+    const list = Array.from({ length: +$('uuid-n').value }, uuid);
+    $('uuid-list').innerHTML = list.map(u => `<li><span class="od-truncate">${u}</span><button class="btn btn-ghost" type="button" data-u="${u}" aria-label="Copy ${u}">Copy</button></li>`).join('');
+  }
+  $('uuid-go').addEventListener('click', uuidGo);
+  $('uuid-list').addEventListener('click', e => { const b = e.target.closest('[data-u]'); if (b) copy(b.dataset.u); });
+  $('uuid-copy').addEventListener('click', () => copy([...$('uuid-list').querySelectorAll('[data-u]')].map(b => b.dataset.u).join('\n')));
+  uuidGo();
+
+  // ---------- Random ----------
+  const hist = [];
+  function rndGo() {
+    const min = Math.ceil(+$('rnd-min').value), max = Math.floor(+$('rnd-max').value);
+    if ($('rnd-min').value === '' || $('rnd-max').value === '') { err('rnd-max', 'rnd-error', 'Fill in both bounds.'); return; }
+    if (min > max) { err('rnd-max', 'rnd-error', `Max (${max}) must be greater than or equal to min (${min}).`); $('rnd-max').focus(); return; }
+    err('rnd-max', 'rnd-error', '');
+    const n = min + Math.floor(Math.random() * (max - min + 1));
+    $('rnd-out').textContent = n; $('rnd-range').textContent = `Result · [${min}, ${max}]`;
+    hist.unshift(n); $('rnd-hist').textContent = 'Previous: ' + hist.slice(1, 8).join(' · ');
+  }
+  $('rnd-go').addEventListener('click', rndGo); onEnter(['rnd-min', 'rnd-max'], rndGo);
+
+  // ---------- Paste ----------
+  let pasteText = '';
+  function pasteGo() {
+    const v = $('paste-in').value;
+    if (!v.trim()) { err('paste-in', 'paste-error', 'Please enter some text before submitting.'); $('paste-in').focus(); return; }
+    err('paste-in', 'paste-error', '');
+    busy($('paste-go'), 'Saving…', () => {
+      pasteText = v; const id = genId(8);
+      $('paste-id').textContent = id;
+      setLink('paste-url', 'https://' + HOST + 'paste/' + id, HOST + 'paste/' + id);
+      $('paste-lock').textContent = $('paste-pw').value ? 'password protected' : 'public';
+      $('paste-show').textContent = v;
+      $('paste-result').hidden = false; $('paste-empty').hidden = true; $('paste-url').focus();
+    });
+  }
+  $('paste-go').addEventListener('click', pasteGo);
+  $('paste-raw').addEventListener('click', () => { const u = URL.createObjectURL(new Blob([pasteText], { type: 'text/plain;charset=utf-8' })); window.open(u, '_blank', 'noopener'); });
+
+  // ---------- QR ----------
+  function qrGo() {
+    const v = $('qr-in').value.trim();
+    if (!v) { err('qr-in', 'qr-error', 'Enter a text or a URL to encode.'); $('qr-in').focus(); return; }
+    err('qr-in', 'qr-error', '');
+    $('qr-api').textContent = 'GET /api/qr?text=' + encodeURIComponent(v);
+    $('qr-result').hidden = false;
+  }
+  $('qr-go').addEventListener('click', qrGo); onEnter(['qr-in'], qrGo);
+
+  // ---------- Mailto ----------
+  function mtGo() {
+    const to = $('mt-to').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) { err('mt-to', 'mt-error', to ? 'Not a valid email address, e.g. name@example.com.' : 'Enter the recipient address.'); $('mt-to').focus(); return; }
+    err('mt-to', 'mt-error', '');
+    const q = new URLSearchParams(); const s = $('mt-subject').value.trim(), b = $('mt-body').value;
+    if (s) q.set('subject', s); if (b) q.set('body', b);
+    const link = 'mailto:' + to + (q.toString() ? '?' + q.toString().replace(/\+/g, '%20') : '');
+    setLink('mt-out', link, link);
+    $('mt-result').hidden = false; $('mt-empty').hidden = true;
+  }
+  $('mt-go').addEventListener('click', mtGo); onEnter(['mt-to', 'mt-subject'], mtGo);
+  $('mt-to').addEventListener('blur', () => { if ($('mt-to').value.trim() && !$('mt-error').hidden) mtGo(); });
+
+  // ---------- DNS (sample) ----------
+  function dnsGo() {
+    const d = $('dns-in').value.trim().toLowerCase();
+    if (!/^([a-z0-9-]+\.)+[a-z]{2,}$/.test(d)) { err('dns-in', 'dns-error', d ? 'Not a valid domain name, e.g. example.com.' : 'Enter a domain name.'); $('dns-in').focus(); return; }
+    err('dns-in', 'dns-error', '');
+    const t = $('dns-type').value;
+    const sample = { A: '192.0.2.10', AAAA: '2001:db8::10', MX: '10 mail.' + d, TXT: '"v=spf1 -all"', NS: 'ns1.' + d, CNAME: '–' }[t];
+    busy($('dns-go'), 'Looking up…', () => {
+      $('dns-out').innerHTML = `<dt>Query</dt><dd>${esc(d)} ${t}</dd><dt>Answer</dt><dd>${esc(sample)}</dd><dt>TTL</dt><dd>3600</dd>`;
+      $('dns-result').hidden = false;
+    });
+  }
+  $('dns-go').addEventListener('click', dnsGo); onEnter(['dns-in'], dnsGo);
+
+  // ---------- IP / Fingerprint (browser data) ----------
+  function renderIp() {
+    $('ip-out').innerHTML = [['User-Agent', navigator.userAgent], ['Accept-Language', (navigator.languages || [navigator.language]).join(', ')], ['DNT', navigator.doNotTrack ?? 'unset']].map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
+  }
+  let fp = {};
+  function renderFp() {
+    fp = {
+      userAgent: navigator.userAgent,
+      languages: (navigator.languages || [navigator.language]).join(', '),
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      screen: `${screen.width}×${screen.height} @${window.devicePixelRatio}x`,
+      viewport: `${innerWidth}×${innerHeight}`,
+      colorDepth: screen.colorDepth + ' bit',
+      cpuThreads: navigator.hardwareConcurrency ?? 'hidden',
+      cookies: navigator.cookieEnabled ? 'enabled' : 'disabled',
+      doNotTrack: navigator.doNotTrack ?? 'unset',
+      reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduce' : 'no-preference'
+    };
+    $('fp-out').innerHTML = Object.entries(fp).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
+  }
+  $('fp-copy').addEventListener('click', () => copy(JSON.stringify(fp, null, 2)));
+
+  // ---------- OCR (sample) ----------
+  $('ocr-go').addEventListener('click', () => {
+    const f = $('ocr-in').files[0];
+    if (!f) { err('ocr-in', 'ocr-error', 'Choose an image first.'); $('ocr-in').focus(); return; }
+    if (!/^image\/(png|jpeg|webp)$/.test(f.type)) { err('ocr-in', 'ocr-error', 'Unsupported file: use PNG, JPEG or WebP.'); return; }
+    err('ocr-in', 'ocr-error', '');
+    busy($('ocr-go'), 'Extracting…', () => { $('ocr-file').textContent = `${f.name} · ${Math.round(f.size / 1024)} KB`; $('ocr-result').hidden = false; });
+  });
+
+  // ---------- Dashboard ----------
+  function renderDash() {
+    const d = store.dashboard;
+    $('dash-create').hidden = !!d; $('dash-view').hidden = !d;
+    if (!d) return;
+    $('dash-title').textContent = d.name;
+    $('dash-sub').textContent = d.desc || 'No description.';
+    $('dash-sub').hidden = false;
+    $('dash-id').textContent = 'id ' + d.id + ' · ' + HOST + 'dashboard/' + d.id;
+    $('dl-count').textContent = d.links.length;
+    $('dl-list').innerHTML = d.links.map((l, i) => `<li data-i="${i}"><div class="od-stack" style="--od-gap:2px"><span class="od-truncate">${esc(l.title || l.url)}</span><a class="od-truncate" href="${esc(l.url)}" target="_blank" rel="noopener" style="font-size: var(--text-xs)">${esc(l.url)}</a></div><button class="btn btn-ghost" type="button" data-rm="${i}" aria-label="Remove ${esc(l.title || l.url)}">Remove</button></li>`).join('');
+    $('dl-list').hidden = !d.links.length; $('dl-empty').hidden = !!d.links.length;
+    $('dash-spray').disabled = !d.links.length;
+  }
+  $('dash-go').addEventListener('click', () => {
+    const n = $('dash-name').value.trim();
+    if (!n) { err('dash-name', 'dash-error', 'Give your dashboard a name.'); $('dash-name').focus(); return; }
+    err('dash-name', 'dash-error', '');
+    store.dashboard = { id: genId(8), name: n, desc: $('dash-desc').value.trim(), links: [] }; save(); renderDash(); $('dl-url').focus();
+  });
+  onEnter(['dash-name', 'dash-desc'], () => $('dash-go').click());
+  function addLink() {
+    const u = $('dl-url').value.trim();
+    if (!isUrl(u)) { err('dl-url', 'dl-error', u ? 'Not a valid URL: it must start with http:// or https://.' : 'Enter the link URL.'); $('dl-url').focus(); return; }
+    err('dl-url', 'dl-error', '');
+    store.dashboard.links.push({ title: $('dl-title').value.trim(), url: u }); save();
+    $('dl-title').value = ''; $('dl-url').value = ''; renderDash(); $('dl-title').focus();
+  }
+  $('dl-add').addEventListener('click', addLink); onEnter(['dl-title', 'dl-url'], addLink);
+  $('dl-list').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-rm]'); if (!b) return;
+    const i = +b.dataset.rm; store.dashboard.links.splice(i, 1); save(); renderDash();
+    const next = $('dl-list').querySelector(`[data-rm="${Math.min(i, store.dashboard.links.length - 1)}"]`);
+    (next || $('dl-url')).focus();
+  });
+  $('dash-spray').addEventListener('click', () => {
+    $('spray-links').value = store.dashboard.links.map(l => l.url).join('\n');
+    go('spray'); sprayGo();
+  });
+
+  // ---------- Abuse ----------
+  $('ab-go').addEventListener('click', () => {
+    const u = $('ab-url').value.trim(), m = $('ab-mail').value.trim();
+    const okU = err('ab-url', 'ab-url-error', !u ? 'Enter the link you want to report.' : (!isUrl(u) ? 'Not a valid URL: paste the full link.' : ''));
+    const okM = err('ab-mail', 'ab-mail-error', m && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m) ? 'Not a valid email address.' : '');
+    if (!okU) { $('ab-url').focus(); return; } if (!okM) { $('ab-mail').focus(); return; }
+    busy($('ab-go'), 'Sending…', () => { $('ab-echo').textContent = u; $('abuse-form').hidden = true; $('ab-result').hidden = false; $('ab-again').focus(); });
+  });
+  $('ab-again').addEventListener('click', () => { ['ab-url', 'ab-details', 'ab-mail'].forEach(i => { $(i).value = ''; }); $('ab-result').hidden = true; $('abuse-form').hidden = false; $('ab-url').focus(); });
+
+  go((location.hash || '#index').slice(1), false);
+})();
+</script>
+</body>
+</html>

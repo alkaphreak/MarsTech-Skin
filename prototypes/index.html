@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MarsTech Skin · prototypes</title>
+<!-- Preview only: real projects serve the fonts locally (DESIGN.md §3). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=block" />
+<link rel="stylesheet" href="od-layout.css" />
+<link rel="stylesheet" href="../tokens.css" />
+<link rel="stylesheet" href="../marstech.css" />
+<style>
+  main { padding-block: var(--section-y-phone); }
+  @media (min-width: 1024px) { main { padding-block: var(--section-y-desktop); } }
+  h1 { font-size: clamp(var(--text-2xl), 6vw, var(--text-4xl)); text-transform: uppercase; margin-top: var(--space-3); }
+  .intro { color: var(--fg-2); margin-top: var(--space-4); max-width: 60ch; }
+  .list { list-style: none; margin: var(--space-12) 0 0; padding: 0; border-top: 1px solid var(--border); }
+  .list a { display: grid; gap: var(--space-1); padding: var(--space-5) 0; border-bottom: 1px solid var(--border); color: var(--fg); text-decoration: none; }
+  @media (min-width: 768px) { .list a { grid-template-columns: 220px minmax(0, 1fr) auto; gap: var(--space-6); align-items: baseline; } }
+  .list strong { font: 600 var(--text-xl)/1.2 var(--font-display); letter-spacing: var(--tracking-display); text-transform: uppercase; }
+  .list .desc { color: var(--fg-2); }
+  .list .go { color: var(--mt-link); font: var(--text-xs)/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; }
+  @media (hover: hover) { .list a:hover .go { text-decoration: underline; } .list a:hover strong { color: var(--accent); } }
+</style>
+</head>
+<body>
+<header class="mt-header">
+  <div class="wrap">
+    <span class="mt-brand">MarsTech<span class="dot">.</span>skin</span>
+    <nav class="mt-nav" aria-label="Prototypes">
+      <a href="sol4-space.html">MLS</a>
+      <a href="cv.html">CV</a>
+      <a href="taskwarrior-popup.html">Popup</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <span class="mt-label">Glacier néon · MARSTECH-851</span>
+  <h1>Prototypes</h1>
+  <p class="intro">Trois surfaces MarsTech dans le même skin : bleu glacier sur bleu-noir, rose pour les liens, coins coupés, sans lueur.</p>
+  <ul class="list">
+    <li><a href="sol4-space.html"><strong>sol4.space</strong><span class="desc">marstech-link-spray : Spray de liens, Shortener, Pastebin, Dashboard et les 11 outils du menu.</span><span class="go">Ouvrir →</span></a></li>
+    <li><a href="cv.html"><strong>CV</strong><span class="desc">MarsTech-CV-Website : le CV de cv.marstech.fr, frise et compétences filtrables.</span><span class="go">Ouvrir →</span></a></li>
+    <li><a href="taskwarrior-popup.html"><strong>Popup</strong><span class="desc">Send to Taskwarrior Hardened : enregistrer la page ouverte comme favori dans project:Links.</span><span class="go">Ouvrir →</span></a></li>
+  </ul>
+</main>
+</body>
+</html>

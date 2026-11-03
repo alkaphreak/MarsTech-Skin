@@ -18,13 +18,24 @@ The specimen is `docs/preview/specimen.html`. To refresh the image after a token
   --screenshot="$PWD/docs/images/overview.png" "file://$PWD/docs/preview/specimen.html"
 ```
 
+## Prototypes
+
+`prototypes/` holds the three products rendered with this skin, built in Open Design and validated on
+2026-11-03 (MARSTECH-851). Open `prototypes/index.html` in a browser; the CV uses placeholder contact
+details and client names.
+
+| sol4.space | CV | Taskwarrior popup |
+|------------|----|-------------------|
+| ![sol4.space prototype](docs/images/sol4-space.png) | ![CV prototype](docs/images/cv.png) | ![Taskwarrior popup prototype](docs/images/taskwarrior-popup.png) |
+
 ## Files
 
 | File           | Role                                                                  |
 |----------------|-----------------------------------------------------------------------|
 | `tokens.css`   | Source of truth for values: the 56 tokens of the Open Design schema   |
-| `marstech.css` | Brand extensions outside that schema: link color, clipped corners, labels |
+| `marstech.css` | Brand extensions and base components: link color, clipped corners, labels, header, buttons, fields, panels, badges, toast |
 | `DESIGN.md`    | The rules: color roles, typography, components, anti-patterns         |
+| `prototypes/`  | sol4.space, CV and popup prototypes (`od-layout.css`: Open Design layout helpers) |
 
 ## Use it in a project
 

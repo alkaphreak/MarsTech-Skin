@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stéphane Robin · CV · Tech Lead Backend</title>
+<!-- Preview only: real projects serve the fonts locally (DESIGN.md §3). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=block" />
+<link rel="stylesheet" href="od-layout.css" />
+<link rel="stylesheet" href="../tokens.css" />
+<link rel="stylesheet" href="../marstech.css" />
+<style>
+  .mt-header { position: sticky; top: 0; background: var(--bg); z-index: 10; }
+  html { scroll-padding-top: 80px; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+  .hero { padding-block: var(--section-y-phone); border-bottom: 1px solid var(--border-soft); }
+  @media (min-width: 1024px) { .hero { padding-block: var(--section-y-desktop) var(--space-12); } }
+  .hero h1 { font-size: clamp(var(--text-3xl), 7vw, var(--text-4xl)); text-transform: uppercase; margin-top: var(--space-3); }
+  .hero .role { margin-top: var(--space-4); font: 500 var(--text-lg)/1.45 var(--font-display); letter-spacing: var(--tracking-display); color: var(--fg-2); max-width: 60ch; }
+  .contacts { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin-top: var(--space-5); font: var(--text-sm)/1.5 var(--font-mono); }
+  .contacts .loc { color: var(--muted); }
+  .contacts a { display: inline-flex; align-items: center; min-height: 44px; overflow-wrap: anywhere; }
+  .hero .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
+
+  .body { display: grid; gap: var(--space-8); padding-block: var(--space-8) var(--space-12); }
+  @media (min-width: 1024px) { .body { grid-template-columns: 220px minmax(0, 1fr); gap: var(--space-12); } }
+  .toc { display: none; }
+  @media (min-width: 1024px) {
+    .toc { display: block; position: sticky; top: 96px; align-self: start; }
+    .toc ol { list-style: none; margin: var(--space-3) 0 0; padding: 0; border-left: 1px solid var(--border); }
+    .toc a { display: flex; align-items: center; min-height: 40px; padding-left: var(--space-4); margin-left: -1px; border-left: 1px solid transparent; color: var(--fg-2); text-decoration: none; font: var(--text-xs)/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: 0.06em; }
+    .toc a[aria-current="true"] { color: var(--accent); border-left-color: var(--accent); }
+  }
+  @media (min-width: 1024px) and (hover: hover) { .toc a:hover { color: var(--fg); } }
+
+  section.block + section.block { margin-top: var(--space-12); }
+  .block-head { display: flex; justify-content: space-between; align-items: end; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-5); }
+  .block-head h2 { font-size: var(--text-2xl); text-transform: uppercase; margin-top: var(--space-2); }
+
+  /* Timeline */
+  .timeline { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--border); }
+  .job { position: relative; padding: 0 0 var(--space-8) var(--space-6); }
+  .job::before { content: ""; position: absolute; left: -5px; top: 8px; width: 9px; height: 9px; background: var(--bg); border: 1px solid var(--accent); }
+  .job.is-match::before { background: var(--accent); }
+  .job.is-dim { opacity: 0.45; }
+  .job h3 { font-size: var(--text-xl); }
+  .job .client { color: var(--fg-2); }
+  .roles { display: grid; gap: var(--space-1); margin-top: var(--space-2); }
+  .role-line { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); align-items: baseline; }
+  .role-line strong { font-weight: 600; color: var(--fg); }
+  .job ul.bullets { margin: var(--space-4) 0 0; padding-left: var(--space-5); display: grid; gap: var(--space-2); max-width: 75ch; color: var(--fg); }
+  .job ul.bullets li::marker { color: var(--accent); content: "▪  "; }
+  .stack { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-4); }
+  .stack .badge.is-hit { color: var(--accent); border-color: var(--accent); }
+  .toggle { margin-top: var(--space-3); }
+  .earlier { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--border); }
+  .earlier li { display: grid; gap: var(--space-1); padding: var(--space-3) 0; border-bottom: 1px solid var(--border); }
+  @media (min-width: 768px) { .earlier li { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-4); align-items: baseline; } }
+
+  /* Skills */
+  .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+  .filters .input { width: 220px; }
+  .chip { min-height: 44px; padding: 0 var(--space-3); background: transparent; color: var(--fg-2); border: 1px solid var(--border); font: var(--text-xs)/1 var(--font-mono); cursor: pointer; }
+  .chip[aria-pressed="true"] { color: var(--accent-on); background: var(--accent); border-color: var(--accent); }
+  @media (hover: hover) { .chip[aria-pressed="false"]:hover { color: var(--fg); border-color: var(--fg-2); } }
+  .skills { display: grid; gap: var(--space-3); margin-top: var(--space-5); }
+  @media (min-width: 768px) { .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .skill-cat { padding: var(--space-4); }
+  .skill-cat h3 { font-size: var(--text-base); text-transform: uppercase; }
+  .skill-cat .stack { margin-top: var(--space-3); }
+  .badge.is-key { color: var(--fg); border-color: var(--fg-2); }
+  .badge.is-hit { color: var(--accent); border-color: var(--accent); }
+  .skill-hint { margin-top: var(--space-3); }
+
+  /* Lists */
+  .two { display: grid; gap: var(--space-3); }
+  @media (min-width: 768px) { .two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .plain { list-style: none; margin: 0; padding: 0; }
+  .plain li { display: grid; gap: var(--space-1); padding: var(--space-3) 0; border-bottom: 1px solid var(--border); }
+  .plain li:first-child { border-top: 1px solid var(--border); }
+  .contact-panel { padding: var(--space-6) var(--space-4); }
+  @media (min-width: 768px) { .contact-panel { padding: var(--space-6); } }
+  .contact-panel p { color: var(--fg-2); margin-top: var(--space-3); max-width: 60ch; }
+  .contact-panel .actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-5); }
+
+  footer.mt-foot { border-top: 1px solid var(--border-soft); padding-block: var(--space-6); }
+  footer.mt-foot .wrap { display: flex; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  footer.mt-foot a { display: inline-flex; align-items: center; min-height: 44px; }
+</style>
+</head>
+<body>
+<header class="mt-header">
+  <div class="wrap">
+    <a class="mt-brand" href="#top">cv<span class="dot">.</span>marstech</a>
+    <nav class="mt-nav" aria-label="Langue">
+      <a href="#top" aria-current="page" lang="fr">FR</a>
+      <a href="https://cv.marstech.fr/?lang=en" lang="en" hreflang="en">EN</a>
+      <a href="index.html">Prototypes</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <span class="mt-label">Montréal, Québec · disponible pour échanger</span>
+      <h1>Stéphane Robin</h1>
+      <p class="role">Tech Lead Backend · Kotlin · Java · Spring Boot · Kafka · Banque et finance</p>
+      <div class="contacts">
+        <a href="mailto:prenom.nom@example.com">prenom.nom@example.com</a>
+        <a href="https://www.linkedin.com/in/exemple/" target="_blank" rel="noopener">linkedin</a>
+        <a href="https://github.com/alkaphreak" target="_blank" rel="noopener">github/alkaphreak</a>
+        <a href="https://medium.com/@exemple" target="_blank" rel="noopener">medium</a>
+      </div>
+      <div class="actions">
+        <a class="btn btn-primary mt-clip" href="https://cv.marstech.fr/pdf?lang=fr">Télécharger le PDF</a>
+        <a class="btn btn-secondary" href="#contact">Me contacter</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap body">
+    <aside class="toc" aria-label="Sommaire">
+      <span class="mt-label">Sommaire</span>
+      <ol>
+        <li><a href="#experiences">Expériences</a></li>
+        <li><a href="#competences">Compétences</a></li>
+        <li><a href="#formation">Formation</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ol>
+    </aside>
+
+    <div>
+      <section class="block" id="experiences" aria-labelledby="exp-title">
+        <div class="block-head">
+          <div>
+            <span class="mt-label">2008 → aujourd'hui</span>
+            <h2 id="exp-title">Expériences</h2>
+          </div>
+          <button class="btn btn-secondary" id="expand-all" type="button" aria-pressed="false">Tout déplier</button>
+        </div>
+        <p class="mt-meta" id="filter-status" aria-live="polite" hidden></p>
+        <ol class="timeline" id="timeline"></ol>
+      </section>
+
+      <section class="block" id="competences" aria-labelledby="skills-title">
+        <div class="block-head">
+          <div>
+            <span class="mt-label">Pile technique</span>
+            <h2 id="skills-title">Compétences</h2>
+          </div>
+        </div>
+        <div class="filters" role="group" aria-label="Filtrer les compétences">
+          <label class="sr-only" for="skill-search">Rechercher une technologie</label>
+          <input class="input" id="skill-search" type="search" placeholder="ex. Kafka" autocomplete="off" />
+          <div id="cat-chips" class="filters"></div>
+        </div>
+        <p class="mt-meta skill-hint">Cliquez une technologie, ou tapez-la, pour surligner les missions qui l'utilisent.</p>
+        <div class="skills" id="skills"></div>
+      </section>
+
+      <section class="block" id="formation" aria-labelledby="edu-title">
+        <div class="block-head">
+          <div>
+            <span class="mt-label">Certifications · éducation · langues</span>
+            <h2 id="edu-title">Formation</h2>
+          </div>
+        </div>
+        <div class="two">
+          <div>
+            <span class="mt-label">Certifications et formations</span>
+            <ul class="plain" style="margin-top: var(--space-3)">
+              <li><span>Formation Datadog : Backend Monitoring APM, Frontend Monitoring APM</span><span class="mt-meta">septembre 2026</span></li>
+              <li><span>AWS Certified Cloud Practitioner</span><span class="mt-meta">décembre 2025</span></li>
+              <li><span>Formation MongoDB</span><span class="mt-meta">octobre 2025</span></li>
+              <li><span>Formation Neo4j</span><span class="mt-meta">octobre 2023</span></li>
+            </ul>
+          </div>
+          <div>
+            <span class="mt-label">Éducation</span>
+            <ul class="plain" style="margin-top: var(--space-3)">
+              <li><span>DUT Génie Informatique</span></li>
+              <li><span>BTS Informatique, développement d'applications</span></li>
+            </ul>
+            <span class="mt-label" style="margin-top: var(--space-6)">Langues</span>
+            <ul class="plain" style="margin-top: var(--space-3)">
+              <li><span>Français, natif</span></li>
+              <li><span>Anglais, courant</span><span class="mt-meta">TOEIC 985, C1, novembre 2024</span></li>
+              <li><span>Espagnol, notions</span></li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top: var(--space-8)">
+          <span class="mt-label">Intérêts</span>
+          <p style="margin-top: var(--space-3); color: var(--fg-2); max-width: 75ch">Taekwondo, crossfit, roller, menuiserie, jeux vidéo, sciences et aérospatial, science-fiction (romans, films, séries), mangas et films d'animation.</p>
+        </div>
+      </section>
+
+      <section class="block" id="contact" aria-labelledby="contact-title">
+        <div class="panel mt-clip contact-panel">
+          <span class="mt-label">Contact</span>
+          <h2 id="contact-title" style="font-size: var(--text-2xl); text-transform: uppercase; margin-top: var(--space-2)">Écrire un message</h2>
+          <p>Pour une mission backend Kotlin ou Java, un poste de Tech Lead ou une question sur un projet : le plus simple reste l'e-mail.</p>
+          <div class="actions">
+            <a class="btn btn-primary mt-clip" href="mailto:prenom.nom@example.com">Envoyer un e-mail</a>
+            <button class="btn btn-secondary" id="copy-mail" type="button">Copier l'adresse</button>
+            <a class="btn btn-secondary" href="https://www.linkedin.com/in/exemple/" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="mt-foot">
+  <div class="wrap">
+    <a href="https://marstech.fr/">© 2018–2026 Marstech</a>
+    <span class="mt-meta">Prototype MarsTech Skin · contenu de cv.marstech.fr</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(() => {
+  const jobs = [
+    { co: 'Abbeal', client: 'Banque canadienne', open: true,
+      roles: [['Pod Lead Backend', 'août 2026 / présent', 'Montréal, Québec'], ['Développeur Backend Senior', 'janvier 2026 / juillet 2026', '']],
+      bullets: [
+        'Dirigé en tant que Pod Lead une équipe de 7 postes (4 développeurs backend, 1 responsable QA) : 17 arbitrages techniques consignés en 6 semaines, 2 bloquants de mise en production levés avant ou pendant la fenêtre de déploiement.',
+        'Mené 10 entretiens techniques de recrutement (6 pour Abbeal, 4 pour le client).',
+        "Piloté en lead dev l'optimisation d'un flux de transactions bancaires en temps réel (Kafka) en 7 lots : consommation par lot, traitement asynchrone, gestion des reprises, multipliant le débit par 11,6 et réduisant le traitement de 2 h à 30 min (validé en pré-production).",
+        'Refondu un connecteur IBM MQ vers Kafka (schémas Avro, partitionnement, rejeu des messages en échec), validé par tests de charge k6 à 48 000 messages/s sur 2 millions de messages, sans erreur.',
+        "Corrigé les constats d'un audit de sécurité en migrant un service de Spring Boot 2.7 / Java 11 vers Spring Boot 4 / Java 25, et couvert 17 CVE par la montée de version de BouncyCastle.",
+        "Conçu la publication d'événements anti-fraude (CloudEvents sur Kafka) à l'ouverture de compte, sans impact sur le parcours client.",
+        "Mené la conception amont de l'intégration d'un portefeuille de cartes de crédit dans une migration bancaire : 35 tickets rédigés, services REST, événements Kafka, tests de charge.",
+        "Revu 180 pull requests sur 41 dépôts, dont ceux d'autres équipes, et rétabli l'intégration continue (CI) sur 5 dépôts.",
+        "Conçu 17 compétences versionnées pour assistant de code IA (revue de PR, mise en production, saisie des temps), adoptées au-delà du pod, et un agent de triage d'incidents Datadog (Java 21, Spring Boot 4)."
+      ],
+      stack: ['Java 21/25', 'Spring Boot 3.5–4.1', 'Spring Kafka', 'Kafka/Confluent', 'Avro', 'CloudEvents', 'IBM MQ', 'MongoDB', 'GraphQL', 'Spring Security/OAuth2', 'Kubernetes', 'Helm', 'ArgoCD', 'Vault', 'Okta', 'Datadog', 'k6', 'GitHub Actions', 'SonarQube', 'Snyk', 'Maven', 'JUnit', 'Mockito'] },
+    { co: 'Abbeal', client: 'Société de crédit', open: true,
+      roles: [['Développeur Backend Senior', 'décembre 2024 / décembre 2025 (1 an et 1 mois)', 'Montréal, Québec']],
+      bullets: [
+        'Architecturé et développé des API RESTful sécurisées pour 3 modules financiers critiques, améliorant la maintenabilité et réduisant la dette technique.',
+        "Migré une application Java/Spring sur WebSphere vers une architecture serverless TypeScript/AWS Lambda, réduisant les coûts d'infrastructure.",
+        'Automatisé les pipelines CI/CD avec GitHub Actions et Jenkins, réduisant le temps de déploiement de 45 min à 8 min.',
+        'Implémenté Liquibase pour les migrations de base de données, éliminant les risques de régression de schéma.',
+        "Transféré les dépôts d'AWS CodeCommit vers GitHub et de Nexus vers AWS CodeArtifact, centralisant la gestion des artefacts.",
+        "Piloté l'intégration des outils GenAI (GitHub Copilot, Amazon Q) pour structurer les processus de migration et rédiger les bonnes pratiques.",
+        'Appliqué les standards OWASP et sécurité, réduisant les vulnérabilités critiques détectées en revue de code.',
+        'Supervisé la stabilité et les performances avec Dynatrace (monitoring, alerting, APM).'
+      ],
+      stack: ['Java 8', 'Spring', 'TypeScript', 'AWS', 'Liquibase', 'GitHub Actions', 'Jenkins', 'Docker', 'Dynatrace', 'Maven', 'JIRA', 'GitHub', 'Git', 'SQL', 'JPA/Hibernate', 'JUnit', 'MSSQL'] },
+    { co: 'Abbeal', client: 'Coopérative financière', open: false,
+      roles: [['Développeur Backend Senior', 'juillet 2024 / novembre 2024 (5 mois)', 'Montréal, Québec']],
+      bullets: [
+        'Développé des API RESTful sécurisées en appliquant les standards OWASP, éliminant les vulnérabilités critiques identifiées en audit de sécurité.',
+        'Refactorisé 6 modules existants, simplifiant les traitements et améliorant la maintenabilité du code.',
+        'Mis en place une couverture de tests unitaires (JUnit, PowerMock) atteignant 80% sur les modules sécurisés.',
+        'Intégré les pipelines CI/CD avec Jenkins et GitHub, standardisant les déploiements sur Azure.',
+        "Coordonné les revues de code et pair programming pour garantir la conformité sécurité sur l'ensemble de l'équipe."
+      ],
+      stack: ['Java 8', 'Spring', 'Angular', 'JUnit', 'PowerMock', 'MySQL', 'Jenkins', 'Azure', 'Maven', 'JIRA', 'GitHub', 'Git', 'SQL', 'JPA/Hibernate', 'TypeScript'] },
+    { co: 'Whoz', client: '', open: true,
+      roles: [['Développeur Backend Senior, Java/Kotlin', 'septembre 2019 / juin 2024 (4 ans et 10 mois)', 'Paris, Île-de-France']],
+      bullets: [
+        'Architecturé la migration complète Groovy/Grails JDK 8 vers Kotlin/Spring Boot JDK 17, réduisant les temps de build de 35%.',
+        'Optimisé les performances de traitement via CompletableFuture, Async, Events et Coroutines Kotlin, réduisant les temps de traitement batch de 50%.',
+        'Introduit les standards Kotlin et Java 17 sur 3 projets, améliorant la maintenabilité et réduisant la dette technique.',
+        "Piloté l'intégration des outils IA (OpenAI ChatGPT) et implémenté les API LLM au sein de la plateforme SaaS de gestion de compétences.",
+        'Mis en place les pipelines CI/CD avec GitLab CI/CD et Docker pour le développement local et la production.',
+        'Implémenté Cypress.io et TestContainers pour les tests bout-en-bout, augmentant la couverture de non-régression.',
+        "Supervisé l'observabilité avec New Relic puis Datadog, améliorant le MTTR et la visibilité des incidents.",
+        'Coordonné les cérémonies Scrum en tant que proxy Scrum Master pour une équipe de 6 développeurs.'
+      ],
+      stack: ['Kotlin', 'Java 17', 'Spring Boot', 'Groovy/Grails', 'OpenAI', 'GitLab CI/CD', 'Docker', 'Cypress.io', 'TestContainers', 'New Relic', 'Datadog', 'SCRUM'] },
+    { co: 'Aneo', client: 'Banque d\'investissement', open: false,
+      roles: [['Consultant Backend Java', 'janvier 2019 / avril 2019 (4 mois)', 'Paris, Île-de-France']],
+      bullets: ["Développé un middleware microservice Spring Boot pour l'interconnexion avec un mainframe IBM AS400, optimisant les accès aux données de trading de devises."],
+      stack: ['Spring Boot', 'Java', 'IBM AS400'] },
+    { co: 'Aneo', client: 'Groupe de protection sociale', open: false,
+      roles: [['Consultant Ingénieur Java Fullstack', 'août 2018 / décembre 2018 (6 mois)', 'Paris, Île-de-France']],
+      bullets: ["Piloté la migration front-end de React vers Angular sur une plateforme de courtage représentant 50% du chiffre d'affaires client."],
+      stack: ['Java', 'React', 'Angular'] },
+    { co: 'Aneo', client: 'Éditeur SaaS conformité', open: false,
+      roles: [['Consultant Ingénieur Java Fullstack', 'janvier 2018 / juillet 2018 (6 mois)', 'Massy, Île-de-France']],
+      bullets: ["Lead développeur et Scrum Master : architecturé la migration microservices vers AWS (résilience accrue, coûts d'infrastructure réduits), avec SSO Keycloak, CI/CD Jenkins et conformité RGPD et ISO 27001."],
+      stack: ['Java', 'AWS', 'Keycloak', 'Jenkins', 'RGPD', 'SCRUM'] },
+    { co: 'Aneo', client: 'Banque de détail', open: false,
+      roles: [['Consultant Ingénieur Java Fullstack', 'juillet 2017 / décembre 2017 (6 mois)', 'La Défense, Île-de-France']],
+      bullets: ['Développé des outils Java/Angular de surveillance du trading consommant des APIs REST et ingérant des données Hadoop pour identifier les anomalies financières.'],
+      stack: ['Java', 'Angular', 'Hadoop'] },
+    { co: 'Extia', client: 'Opérateur de marché', open: false,
+      roles: [['Consultant Ingénieur Java', 'janvier 2017 / juillet 2017 (6 mois)', 'La Défense, Île-de-France']],
+      bullets: ["Conçu et développé l'application Orchestrator Spring Boot/Angular pour industrialiser les déploiements Ansible d'une plateforme de trading haute disponibilité."],
+      stack: ['Spring Boot', 'Angular', 'Ansible'] },
+    { co: 'Extia', client: 'Éditeur documentaire', open: false,
+      roles: [['Ingénieur Java EE', 'juillet 2016 / janvier 2017 (7 mois)', 'Bagneux, Île-de-France']],
+      bullets: ["Développé les interfaces d'administration et fait évoluer le modèle de données d'une application de gestion documentaire pour véhicules blindés (armée de terre)."],
+      stack: ['Java EE'] },
+    { co: 'Extia', client: 'Opérateur de transport', open: false,
+      roles: [['Consultant Ingénieur Java Angular Fullstack', 'mars 2016 / juillet 2016 (5 mois)', 'Noisy Le Grand, Île-de-France']],
+      bullets: ["Développé les modules d'information voyageurs pour une ligne de métro automatique et internationalisé l'application en 3+ langues."],
+      stack: ['Java', 'Angular'] }
+  ];
+  const earlier = [
+    ['Consultant Ingénieur Java', 'Extia - Mutuelle', 'novembre 2015 / mars 2016'],
+    ['Consultant Ingénieur Java', 'Extia - Assureur crédit', 'décembre 2014 / novembre 2015'],
+    ['Consultant Ingénieur Java puis Analyste Fonctionnel MOE/MOA', 'Extia - Opérateur télécom', 'février 2014 / décembre 2014'],
+    ['Ingénieur Java Junior', 'Fullsix - Agence digitale', 'juillet 2013 / janvier 2014'],
+    ['Consultant Java/Spring', 'Alyotech Consulting - Établissement public', 'janvier 2012 / juillet 2013'],
+    ['Responsable du développement intranet', 'FreedomCall', 'août 2011 / décembre 2011'],
+    ['Technicien support', 'Manpower, Econocom - Grands comptes', 'mars 2010 / juillet 2011'],
+    ['Développeur PHP', 'Altitude Telecom', 'août 2008 / février 2010']
+  ];
+  // '*' = mis en gras dans le CV d'origine
+  const skills = [
+    ['Langages', ['*Kotlin', '*Java 21/25', 'SQL', 'TypeScript', 'JavaScript', 'HTML', 'CSS']],
+    ['Frameworks', ['*Spring Boot', '*Spring', 'Spring Cloud Gateway', 'Hibernate', '*JPA', 'GraphQL', 'Angular', 'JUnit', 'Mockito', 'Kotest']],
+    ['Bases de données', ['*MongoDB', '*Neo4j', '*PostgreSQL', '*MySQL', 'Oracle', 'Elasticsearch']],
+    ['Cloud & Infrastructure', ['*AWS', 'OVH SecNumCloud', 'Digital Ocean', '*Docker', '*Kubernetes', '*GitHub Actions', 'Jenkins', 'CI/CD']],
+    ['Outils', ['*Git', '*Maven', 'Gradle', '*JIRA', 'GitHub', 'GitLab', 'Postman', 'Swagger', 'Sonar', 'Liquibase']],
+    ['Méthodologie', ['Agile', '*SCRUM', 'TDD', 'Architecture Microservices', 'OWASP', 'RGPD', 'Loi 25']],
+    ['Gen AI & LLM', ['*GitHub Copilot', '*Kiro', 'OpenAI', 'MistralAI', 'Anthropic Claude', 'AWS Q']],
+    ['Messagerie et événements', ['*Apache Kafka', 'Avro', 'CloudEvents', 'IBM MQ', 'ActiveMQ']],
+    ['Monitoring', ['Datadog', 'New Relic', 'Dynatrace']]
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  // Correspondance souple : "Kafka" trouve "Spring Kafka", "Apache Kafka", "Kafka/Confluent"
+  const matches = (text, q) => !!q && norm(text).includes(norm(q));
+
+  const state = { open: jobs.map(j => j.open), earlierOpen: false, query: '', cat: 'Toutes' };
+
+  function renderTimeline() {
+    const q = state.query.trim();
+    let hits = 0;
+    const html = jobs.map((j, i) => {
+      const hay = [j.client, j.co, ...j.stack, ...j.bullets].join(' ');
+      const hit = matches(hay, q);
+      if (hit) hits++;
+      const cls = q ? (hit ? 'is-match' : 'is-dim') : '';
+      const isOpen = state.open[i] || (q && hit);
+      return `<li class="job ${cls}" data-i="${i}">
+        <h3>${esc(j.co)}${j.client ? ` <span class="client">· ${esc(j.client)}</span>` : ''}</h3>
+        <div class="roles">${j.roles.map(r => `<div class="role-line"><strong>${esc(r[0])}</strong><span class="mt-meta">${esc(r[1])}</span>${r[2] ? `<span class="mt-meta">${esc(r[2])}</span>` : ''}</div>`).join('')}</div>
+        <div id="job-${i}" ${isOpen ? '' : 'hidden'}>
+          <ul class="bullets">${j.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>
+          <div class="stack">${j.stack.map(s => `<span class="badge${matches(s, q) ? ' is-hit' : ''}">${esc(s)}</span>`).join('')}</div>
+        </div>
+        <button class="btn btn-ghost toggle" type="button" data-toggle="${i}" aria-expanded="${isOpen}" aria-controls="job-${i}">${isOpen ? 'Masquer le détail' : 'Voir le détail'}</button>
+      </li>`;
+    }).join('') + `<li class="job" data-i="earlier">
+        <h3>Expérience antérieure <span class="client">· 2008–2016</span></h3>
+        <div id="job-earlier" ${state.earlierOpen ? '' : 'hidden'} style="margin-top: var(--space-4)">
+          <ul class="earlier">${earlier.map(e => `<li><span><strong>${esc(e[0])}</strong>, ${esc(e[1])}</span><span class="mt-meta">${esc(e[2])}</span></li>`).join('')}</ul>
+        </div>
+        <button class="btn btn-ghost toggle" type="button" data-toggle="earlier" aria-expanded="${state.earlierOpen}" aria-controls="job-earlier">${state.earlierOpen ? 'Masquer' : 'Voir les 8 postes'}</button>
+      </li>`;
+    $('timeline').innerHTML = html;
+    const fs = $('filter-status');
+    if (q) { fs.hidden = false; fs.textContent = hits ? `${hits} mission${hits > 1 ? 's' : ''} utilisent « ${q} ».` : `Aucune mission ne mentionne « ${q} ».`; }
+    else fs.hidden = true;
+    const all = state.open.every(Boolean) && state.earlierOpen;
+    $('expand-all').textContent = all ? 'Tout replier' : 'Tout déplier';
+    $('expand-all').setAttribute('aria-pressed', String(all));
+  }
+
+  $('timeline').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-toggle]');
+    if (!b) return;
+    const k = b.dataset.toggle;
+    if (k === 'earlier') state.earlierOpen = !state.earlierOpen;
+    else state.open[+k] = !(b.getAttribute('aria-expanded') === 'true');
+    renderTimeline();
+    $('timeline').querySelector(`[data-toggle="${k}"]`).focus();
+  });
+  $('expand-all').addEventListener('click', () => {
+    const all = state.open.every(Boolean) && state.earlierOpen;
+    state.open = state.open.map(() => !all); state.earlierOpen = !all;
+    renderTimeline();
+  });
+
+  const cats = ['Toutes', ...skills.map(s => s[0])];
+  $('cat-chips').innerHTML = cats.map(c => `<button class="chip" type="button" data-cat="${esc(c)}" aria-pressed="${c === state.cat}">${esc(c)}</button>`).join('');
+  $('cat-chips').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cat]'); if (!b) return;
+    state.cat = b.dataset.cat;
+    $('cat-chips').querySelectorAll('[data-cat]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.cat === state.cat)));
+    renderSkills();
+  });
+
+  function renderSkills() {
+    const q = state.query.trim();
+    $('skills').innerHTML = skills.filter(s => state.cat === 'Toutes' || s[0] === state.cat).map(([cat, items]) => `
+      <div class="panel mt-clip skill-cat">
+        <h3>${esc(cat)}</h3>
+        <div class="stack">${items.map(it => {
+          const key = it.startsWith('*'); const name = key ? it.slice(1) : it;
+          const hit = matches(name, q) || (q && matches(q, name));
+          return `<button class="badge${key ? ' is-key' : ''}${hit ? ' is-hit' : ''}" type="button" data-skill="${esc(name)}" style="cursor:pointer;background:transparent;min-height:44px;padding-inline:10px" aria-pressed="${!!hit}">${esc(name)}</button>`;
+        }).join('')}</div>
+      </div>`).join('');
+  }
+  $('skills').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-skill]'); if (!b) return;
+    const name = b.dataset.skill;
+    const term = name.replace(/^(Apache |Spring )/, '').replace(/ \d.*$/, '');
+    state.query = norm(state.query) === norm(term) ? '' : term;
+    $('skill-search').value = state.query;
+    renderSkills(); renderTimeline();
+    const again = $('skills').querySelector(`[data-skill="${CSS.escape(name)}"]`);
+    if (again) again.focus();
+  });
+  let t;
+  $('skill-search').addEventListener('input', (e) => {
+    clearTimeout(t);
+    t = setTimeout(() => { state.query = e.target.value; renderSkills(); renderTimeline(); }, 150);
+  });
+
+  let toastT;
+  $('copy-mail').addEventListener('click', async () => {
+    const mail = 'prenom.nom@example.com';
+    const toast = $('toast');
+    try { await navigator.clipboard.writeText(mail); toast.textContent = 'Adresse copiée : ' + mail; }
+    catch { toast.textContent = 'Copie bloquée, adresse : ' + mail; }
+    toast.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => { toast.hidden = true; }, 2000);
+  });
+
+  const tocLinks = document.querySelectorAll('.toc a');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      tocLinks.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + en.target.id)));
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  ['experiences', 'competences', 'formation', 'contact'].forEach(id => io.observe($(id)));
+
+  renderTimeline(); renderSkills();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Send to Taskwarrior Hardened · popup</title>
+<!-- Preview only: real projects serve the fonts locally (DESIGN.md §3). -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=block" />
+<link rel="stylesheet" href="od-layout.css" />
+<link rel="stylesheet" href="../tokens.css" />
+<link rel="stylesheet" href="../marstech.css" />
+<style>
+  body { min-height: 100vh; padding: var(--space-12) var(--space-4); }
+  .stage { max-width: var(--container-max); margin: 0 auto; display: grid; gap: var(--space-8); }
+  .stage-head h1 { font-size: var(--text-2xl); text-transform: uppercase; margin-top: var(--space-2); }
+  .stage-head p { color: var(--fg-2); margin-top: var(--space-3); max-width: 65ch; }
+  .board { display: grid; gap: var(--space-8); align-items: start; }
+  @media (min-width: 1024px) { .board { grid-template-columns: 400px minmax(0, 1fr); } }
+  .states { display: grid; gap: var(--space-4); }
+  @media (min-width: 768px) { .states { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .cap { margin-bottom: var(--space-2); }
+
+  /* Popup */
+  .popup { width: 400px; max-width: 100%; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 0 0 1px var(--border), 0 12px 32px rgba(0,0,0,.45); }
+  .p-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border); }
+  .p-brand { font: 600 var(--text-sm)/1.25 var(--font-display); letter-spacing: var(--tracking-display); text-transform: uppercase; }
+  .p-brand .dot { color: var(--accent); }
+  .p-body { padding: var(--space-4); display: grid; gap: var(--space-4); }
+  .p-body .field-error { font-size: var(--text-xs); }
+  .p-foot { padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border); display: grid; gap: var(--space-2); }
+  .submit { width: 100%; }
+  .status-line { min-height: 20px; font: var(--text-xs)/1.5 var(--font-mono); display: flex; gap: var(--space-2); align-items: baseline; }
+  .status-line .sq { width: 8px; height: 8px; flex: none; background: currentColor; transform: translateY(-1px); }
+  .s-info { color: var(--muted); }
+  .s-ok { color: var(--success); }
+  .s-dup { color: var(--warn); }
+  .s-err { color: var(--danger); }
+  .static .input { pointer-events: none; }
+  .saved-list { margin-top: var(--space-6); }
+  .saved-list ul { list-style: none; margin: var(--space-3) 0 0; padding: 0; border-top: 1px solid var(--border); }
+  .saved-list li { display: grid; gap: var(--space-1); padding: var(--space-3) 0; border-bottom: 1px solid var(--border); font: var(--text-xs)/1.5 var(--font-mono); }
+  .saved-list .cmd { background: var(--surface-warm); border: 1px solid var(--border); padding: var(--space-3); font: 12.5px/1.6 var(--font-mono); margin-top: var(--space-3); overflow-x: auto; }
+  .saved-list .cmd .pr { color: var(--accent); }
+  .saved-list .cmd .cm { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="stage-head">
+    <span class="mt-label"><a href="index.html">← Prototypes</a> · Taskwarrior-Connector · v0.3.11</span>
+    <h1>Send to Taskwarrior Hardened</h1>
+    <p>La popup de l'extension Firefox, interactive à gauche. Elle reprend l'onglet actif, et le connecteur local range le favori dans <code>project:Links</code>. À droite, les états de réponse figés.</p>
+  </div>
+
+  <div class="board">
+    <div>
+      <span class="mt-label cap">Popup interactive</span>
+      <div class="popup" role="region" aria-label="Send to Taskwarrior Hardened">
+        <div class="p-head">
+          <span class="p-brand">Send to Taskwarrior<span class="dot">.</span></span>
+          <span class="mt-meta od-nowrap">127.0.0.1:34810</span>
+        </div>
+        <div class="p-body">
+          <div>
+            <label class="field-label" for="title">title <span aria-hidden="true">*</span></label>
+            <input class="input" id="title" type="text" autocomplete="off" aria-describedby="title-error" />
+            <p class="field-error" id="title-error" hidden>Title is required.</p>
+          </div>
+          <div>
+            <label class="field-label" for="url">url <span aria-hidden="true">*</span></label>
+            <input class="input" id="url" type="text" autocomplete="off" spellcheck="false" aria-describedby="url-error" />
+            <p class="field-error" id="url-error" hidden></p>
+          </div>
+          <div>
+            <label class="field-label" for="tags">tags</label>
+            <input class="input" id="tags" type="text" autocomplete="off" spellcheck="false" placeholder="read-later kotlin" aria-describedby="tags-help" />
+            <p class="field-help" id="tags-help" style="font-size: var(--text-xs)">Séparés par des espaces.</p>
+          </div>
+        </div>
+        <div class="p-foot">
+          <button class="btn btn-primary mt-clip submit" id="submit" type="button">Add to Taskwarrior</button>
+          <div class="status-line" id="status" role="status" aria-live="polite"><span class="s-info">project:Links · POST localhost only</span></div>
+        </div>
+      </div>
+
+      <div class="saved-list">
+        <span class="mt-label">Côté Taskwarrior · <span id="saved-count">0</span> favoris</span>
+        <ul id="saved"></ul>
+        <div class="cmd" aria-label="Commandes utiles"><span class="pr">$</span> task project:Links list<br><span class="pr">$</span> task _get <span id="last-id">1</span>.url | xargs open <span class="cm"># macOS</span></div>
+      </div>
+    </div>
+
+    <div>
+      <span class="mt-label cap">États de réponse (lecture seule)</span>
+      <div class="states">
+        <div class="popup static" aria-hidden="true">
+          <div class="p-head"><span class="p-brand">Send to Taskwarrior<span class="dot">.</span></span><span class="mt-meta">200</span></div>
+          <div class="p-foot"><button class="btn btn-primary mt-clip submit" type="button" tabindex="-1">Add to Taskwarrior</button><div class="status-line s-ok"><span class="sq"></span><span>Saved.</span></div></div>
+        </div>
+        <div class="popup static" aria-hidden="true">
+          <div class="p-head"><span class="p-brand">Send to Taskwarrior<span class="dot">.</span></span><span class="mt-meta">200 · duplicate</span></div>
+          <div class="p-foot"><button class="btn btn-primary mt-clip submit" type="button" tabindex="-1">Add to Taskwarrior</button><div class="status-line s-dup"><span class="sq"></span><span>Already saved.</span></div></div>
+        </div>
+        <div class="popup static" aria-hidden="true">
+          <div class="p-head"><span class="p-brand">Send to Taskwarrior<span class="dot">.</span></span><span class="mt-meta">validation</span></div>
+          <div class="p-foot"><button class="btn btn-primary mt-clip submit" type="button" tabindex="-1">Add to Taskwarrior</button><div class="status-line s-err"><span class="sq"></span><span>Title and URL are required.</span></div></div>
+        </div>
+        <div class="popup static" aria-hidden="true">
+          <div class="p-head"><span class="p-brand">Send to Taskwarrior<span class="dot">.</span></span><span class="mt-meta">fetch failed</span></div>
+          <div class="p-foot"><button class="btn btn-primary mt-clip submit" type="button" tabindex="-1">Add to Taskwarrior</button><div class="status-line s-err"><span class="sq"></span><span>Error: connector not running (TypeError: NetworkError when attempting to fetch resource.)</span></div></div>
+        </div>
+        <div class="popup static" aria-hidden="true">
+          <div class="p-head"><span class="p-brand">Send to Taskwarrior<span class="dot">.</span></span><span class="mt-meta">en cours</span></div>
+          <div class="p-foot"><button class="btn btn-primary mt-clip submit" type="button" tabindex="-1" disabled>Saving…</button><div class="status-line s-info"><span class="sq"></span><span>Saving…</span></div></div>
+        </div>
+        <div class="popup static" aria-hidden="true">
+          <div class="p-head"><span class="p-brand">Send to Taskwarrior<span class="dot">.</span></span><span class="mt-meta">500</span></div>
+          <div class="p-foot"><button class="btn btn-primary mt-clip submit" type="button" tabindex="-1">Add to Taskwarrior</button><div class="status-line s-err"><span class="sq"></span><span>Error: task add timed out</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // Onglet actif simulé (browser.tabs.query dans la vraie extension)
+  const activeTab = { title: 'Taskwarrior - Documentation', url: 'https://taskwarrior.org/docs/' };
+  const saved = [
+    { id: 1, title: 'GitHub - alkaphreak/Taskwarrior-Connector', url: 'https://github.com/alkaphreak/Taskwarrior-Connector', tags: ['taskwarrior'] },
+    { id: 2, title: 'Stéphane Robin - CV - Dev Java - Spring Boot', url: 'https://cv.marstech.fr/', tags: [] }
+  ];
+  const $ = (id) => document.getElementById(id);
+  const title = $('title'), url = $('url'), tags = $('tags'), btn = $('submit'), status = $('status');
+  const esc = (s) => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  title.value = activeTab.title; url.value = activeTab.url;
+
+  function renderSaved() {
+    $('saved-count').textContent = saved.length;
+    $('saved').innerHTML = saved.slice().reverse().map(s => `<li><span>${s.id} · ${esc(s.title)}</span><span class="od-truncate" style="color:var(--muted)">url:${esc(s.url)}${s.tags.length ? ' · ' + s.tags.map(t => '+' + esc(t)).join(' ') : ''}</span></li>`).join('');
+    $('last-id').textContent = saved.length ? saved[saved.length - 1].id : 1;
+  }
+
+  function setStatus(kind, text) {
+    status.innerHTML = `<span class="sq s-${kind}"></span><span class="s-${kind}">${esc(text)}</span>`;
+  }
+  function fieldErr(input, el, msg) {
+    if (msg) { el.textContent = msg; el.hidden = false; input.setAttribute('aria-invalid', 'true'); }
+    else { el.hidden = true; input.removeAttribute('aria-invalid'); }
+  }
+  const normUrl = (u) => u.trim().replace(/\/+$/, '');
+
+  function submit() {
+    const t = title.value.trim(), u = url.value.trim();
+    fieldErr(title, $('title-error'), t ? '' : 'Title is required.');
+    let urlMsg = '';
+    if (!u) urlMsg = 'URL is required.';
+    else if (!/^https?:\/\//i.test(u)) urlMsg = 'Only http(s) pages can be saved (not about:, file:…).';
+    fieldErr(url, $('url-error'), urlMsg);
+    if (!t || urlMsg) {
+      setStatus('err', !t && !u ? 'Title and URL are required.' : 'Fix the highlighted field.');
+      (!t ? title : url).focus();
+      return;
+    }
+    btn.disabled = true; btn.textContent = 'Saving…';
+    setStatus('info', 'Saving…');
+    setTimeout(() => {
+      const dup = saved.some(s => normUrl(s.url) === normUrl(u));
+      if (!dup) saved.push({ id: saved.length + 1, title: t, url: u, tags: tags.value.trim().split(/\s+/).filter(Boolean) });
+      renderSaved();
+      setStatus(dup ? 'dup' : 'ok', dup ? 'Already saved.' : 'Saved.');
+      // Comme l'extension : on vide le formulaire dans les deux cas
+      title.value = ''; url.value = ''; tags.value = '';
+      btn.disabled = false; btn.textContent = 'Add to Taskwarrior';
+      title.focus();
+    }, 500);
+  }
+  btn.addEventListener('click', submit);
+  [title, url, tags].forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submit(); } }));
+  title.addEventListener('blur', () => { if (title.value.trim()) fieldErr(title, $('title-error'), ''); });
+  url.addEventListener('blur', () => { if (url.value.trim() && /^https?:\/\//i.test(url.value.trim())) fieldErr(url, $('url-error'), ''); });
+
+  renderSaved();
+})();
+</script>
+</body>
+</html>

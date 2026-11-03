@@ -62,9 +62,15 @@ extensions outside the Open Design schema are in `marstech.css`.
 
 ## 6. Components
 
-- **Buttons**: `--accent` fill, `--accent-on` text, mono uppercase 12px, `.mt-clip` corners, 44px high.
+Classes live in `marstech.css`; `prototypes/` shows them on the three products (validated 2026-11-03).
+Clipped corners (`.mt-clip`) cut the top-left and bottom-right corners.
+
+- **Header**: `.mt-header`, `.mt-brand` (dot in `--accent`), `.mt-nav` (current item in `--accent`).
+- **Buttons**: `.btn` + `.btn-primary` (`--accent` fill, `.mt-clip`), `.btn-secondary`, `.btn-danger`,
+  `.btn-ghost`; mono uppercase 12px, 44px high.
   Secondary: transparent, 1px `--border`, `--fg` text.
-- **Inputs**: `--bg` fill, 1px `--border`, mono text, `--focus-ring` on focus.
+- **Inputs**: `.field-label`, `.input` (`--bg` fill, 1px `--border`, mono text, `--focus-ring` on focus,
+  `--danger` border when `aria-invalid`), `.field-help`, `.field-error`.
 - **Cards / panels**: `--surface`, 1px `--border`, `.mt-clip` corners, padding `--space-3` to `--space-4`.
 - **Badges / tags**: mono 11px, 1px border, square corners; due date in `--warn`.
 - **Code / terminal**: `--surface-warm`, mono 12.5px, prompt in `--accent`, comments in `--muted`.
