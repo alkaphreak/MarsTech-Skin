@@ -35,13 +35,17 @@ details and client names.
 | `tokens.css`   | Source of truth for values: the 56 tokens of the Open Design schema   |
 | `marstech.css` | Brand extensions and base components: link color, clipped corners, labels, header, buttons, fields, panels, badges, toast |
 | `DESIGN.md`    | The rules: color roles, typography, components, anti-patterns         |
+| `fonts.css`    | `@font-face` rules for the self-hosted woff2 files in `fonts/` (OFL)   |
+| `fonts/`       | Oxanium, IBM Plex Sans, JetBrains Mono woff2 (latin), each with its `OFL.txt` |
 | `prototypes/`  | sol4.space, CV and popup prototypes (`od-layout.css`: Open Design layout helpers) |
 
 ## Use it in a project
 
-Copy or vendor both stylesheets, load them in this order, then style components through the tokens:
+Copy or vendor the stylesheets (and `fonts/` next to `fonts.css`), load them in this order, then style
+components through the tokens:
 
 ```html
+<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="marstech.css">
 ```
@@ -51,7 +55,8 @@ Copy or vendor both stylesheets, load them in this order, then style components 
 ```
 
 Fonts (Oxanium, IBM Plex Sans, JetBrains Mono, all under the SIL Open Font License) must be served by
-each project itself: no Google Fonts call at runtime.
+each project itself: no Google Fonts call at runtime. `fonts.css` and `fonts/` do that; keep each
+`OFL.txt` next to its font when copying.
 
 ## Open Design
 
