@@ -57,7 +57,9 @@ extensions outside the Open Design schema are in `marstech.css`.
 ## 5. Layout & Composition
 
 - One column on phone (390px wide must work), up to two on desktop.
-- Header: brand at left (`sol4.space` with the dot in `--accent`), mono nav at right.
+- Header: brand at left (`sol4.space` with the dot in `--accent`), mono nav at right. A site with many
+  sections adds a second row, the tools menu (`.mt-menu`): one row from 992px, a burger
+  (`.mt-menu-toggle`) opening a vertical list below, never a horizontal scroll bar.
 - Each block may carry a mono uppercase label (`.mt-label`) above its content.
 
 ## 6. Components
@@ -66,9 +68,17 @@ Classes live in `marstech.css`; `prototypes/` shows them on the three products (
 Clipped corners (`.mt-clip`) cut the top-left and bottom-right corners.
 
 - **Header**: `.mt-header`, `.mt-brand` (dot in `--accent`), `.mt-nav` (current item in `--accent`).
+- **Tools menu**: `.mt-menu` (mono uppercase links, 44px rows, current item `aria-current="page"` in
+  `--accent` with an underline), `.mt-menu-toggle` burger below 992px; with `data-collapsible`, the
+  page toggles `.is-open` and `aria-expanded`.
 - **Buttons**: `.btn` + `.btn-primary` (`--accent` fill, `.mt-clip`), `.btn-secondary`, `.btn-danger`,
   `.btn-ghost`; mono uppercase 12px, 44px high.
   Secondary: transparent, 1px `--border`, `--fg` text.
+  Action buttons carry a leading icon (Bootstrap Icons on sol4.space: `bi-dice-5` generate,
+  `bi-link-45deg` link, `bi-scissors` shorten, `bi-clipboard` copy); one icon per meaning across a site.
+- **Bootstrap consumers**: keep the markup, point Bootstrap's `--bs-*` variables at the tokens
+  (`--bs-border-radius: 0`), map outline buttons to the secondary look so `--accent` keeps to two uses
+  per screen. Reference: sol4.space `static/assets/css/sol4.css`.
 - **Inputs**: `.field-label`, `.input` (`--bg` fill, 1px `--border`, mono text, `--focus-ring` on focus,
   `--danger` border when `aria-invalid`), `.field-help`, `.field-error`.
 - **Cards / panels**: `--surface`, 1px `--border`, `.mt-clip` corners, padding `--space-3` to `--space-4`.
