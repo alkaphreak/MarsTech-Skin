@@ -2,3 +2,7 @@
 .env
 .idea/
 .DS_Store
+
+# Claude Code local files (may hold secrets, MARSTECH-878)
+.claude/settings.local.json
+CLAUDE.local.md
