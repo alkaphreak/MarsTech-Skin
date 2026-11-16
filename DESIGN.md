@@ -65,7 +65,8 @@ extensions outside the Open Design schema are in `marstech.css`.
 ## 6. Components
 
 Classes live in `marstech.css`; `prototypes/` shows them on the three products (validated 2026-11-03).
-Clipped corners (`.mt-clip`) cut the top-left and bottom-right corners.
+Clipped corners (`.mt-clip`) cut the top-left and bottom-right corners. On `:focus-visible` the clip is
+dropped so the outer `--focus-ring` stays visible: square corners while focused are deliberate, not a bug.
 
 - **Header**: `.mt-header`, `.mt-brand` (dot in `--accent`), `.mt-nav` (current item in `--accent`).
 - **Tools menu**: `.mt-menu` (mono uppercase links, 44px rows, current item `aria-current="page"` in

@@ -5,6 +5,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- `fonts.css`: the header comment closed early on `fonts/*/OFL.txt`, so browsers dropped the Oxanium 500
+  `@font-face` rule (MARSTECH-897)
+- `marstech.css`: a focused `.mt-clip` element lost its focus ring to the clip-path; the clip is now
+  dropped on `:focus-visible` (MARSTECH-897)
+
 ### Added
 
 - `tokens.css`: the 56 Open Design schema tokens for the "Glacier néon" direction (MARSTECH-851)
