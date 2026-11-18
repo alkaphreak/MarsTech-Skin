@@ -77,9 +77,10 @@ dropped so the outer `--focus-ring` stays visible: square corners while focused 
   Secondary: transparent, 1px `--border`, `--fg` text.
   Action buttons carry a leading icon (Bootstrap Icons on sol4.space: `bi-dice-5` generate,
   `bi-link-45deg` link, `bi-scissors` shorten, `bi-clipboard` copy); one icon per meaning across a site.
-- **Bootstrap consumers**: keep the markup, point Bootstrap's `--bs-*` variables at the tokens
-  (`--bs-border-radius: 0`), map outline buttons to the secondary look so `--accent` keeps to two uses
-  per screen. Reference: sol4.space `static/assets/css/sol4.css`.
+- **Leaving Bootstrap**: no product loads Bootstrap any more (sol4.space dropped it in MLS-271). Its
+  `static/assets/css/sol4.css` re-implements, on the tokens, only the Bootstrap class names its markup
+  still uses (a test fails on an uncovered one); outline buttons take the secondary look so `--accent`
+  keeps to two uses per screen. New markup uses the Skin classes above.
 - **Inputs**: `.field-label`, `.input` (`--bg` fill, 1px `--border`, mono text, `--focus-ring` on focus,
   `--danger` border when `aria-invalid`), `.field-help`, `.field-error`.
 - **Cards / panels**: `--surface`, 1px `--border`, `.mt-clip` corners, padding `--space-3` to `--space-4`.

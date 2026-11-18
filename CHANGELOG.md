@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- `DESIGN.md`: "Bootstrap consumers" becomes "Leaving Bootstrap": sol4.space no longer loads Bootstrap and
+  re-implements the class names its markup still uses on the tokens; `marstech.css` tools-menu comment
+  no longer points at Bootstrap's collapse (MLS-271)
+
 ### Fixed
 
 - `fonts.css`: the header comment closed early on `fonts/*/OFL.txt`, so browsers dropped the Oxanium 500
