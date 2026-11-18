@@ -24,10 +24,11 @@ MarsTech-Skin/
 ```
 
 **Consumers**: marstech-link-spray (sol4.space, MLS-250), MarsTech-CV-Website, MarsTech-Crew-Selector,
-MarsTech-Sorties-MTL (vendored copies of `fonts.css`/`marstech.css`), Taskwarrior-Connector popup (CSS inlined
-in `firefox/popup.html`, MARSTECH-729). A token rename breaks them: list it in `CHANGELOG.md`. A fix here is
-only done once every consumer has it: `rtk proxy grep -rl --include='*.css' --include='*.html' mt-clip ~/IdeaProjects`
-finds the copies a fixed list misses (MARSTECH-897).
+MarsTech-Sorties-MTL (no copy: `hugo.toml` mounts this checkout, a redeploy picks a fix up), Taskwarrior-Connector
+(vendored `firefox/tokens.css`, component rules inlined in `firefox/popup.html` and `firefox/options.html`, MARSTECH-729). A token rename breaks them: list it
+in `CHANGELOG.md`. A fix here is only done once every consumer has it: `rtk proxy grep -rlE --include='*.css' --include='*.html' 'mt-clip|--focus-ring' ~/IdeaProjects`
+finds the copies a fixed list misses (MARSTECH-897); skip git-ignored build output (`public/`, `target/`), which a
+rebuild regenerates (MARSTECH-927: Sorties-MTL's `public/` was listed as a consumer to patch).
 
 **Architecture decisions**: `docs/adr/` (MADR, copy `0000-template.md`). Read the ADRs before changing
 the direction; record a new decision there, not only in the ticket.
