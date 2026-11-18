@@ -13,6 +13,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `marstech.css`: `:focus-visible` and `.input:focus` set `outline: none`, so the box-shadow focus ring vanished
+  in forced-colors mode; they now keep a transparent 2px outline that the mode paints (MLS-271)
 - `fonts.css`: the header comment closed early on `fonts/*/OFL.txt`, so browsers dropped the Oxanium 500
   `@font-face` rule (MARSTECH-897)
 - `marstech.css`: a focused `.mt-clip` element lost its focus ring to the clip-path; the clip is now
