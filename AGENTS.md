@@ -29,6 +29,9 @@ MarsTech-Sorties-MTL (no copy: `hugo.toml` mounts this checkout, a redeploy pick
 in `CHANGELOG.md`. A fix here is only done once every consumer has it: `rtk proxy grep -rlE --include='*.css' --include='*.html' 'mt-clip|--focus-ring' ~/IdeaProjects`
 finds the copies a fixed list misses (MARSTECH-897); skip git-ignored build output (`public/`, `target/`), which a
 rebuild regenerates (MARSTECH-927: Sorties-MTL's `public/` was listed as a consumer to patch).
+A base-rule change that clips or wraps (`overflow`, `overflow-wrap`, grid tracks): read each consumer's own CSS
+first and fix what it would cut off in the same sync (MARSTECH-942: `overflow-x: clip` would have hidden
+Crew-Selector's `1fr` columns and long evidence cells).
 
 **Architecture decisions**: `docs/adr/` (MADR, copy `0000-template.md`). Read the ADRs before changing
 the direction; record a new decision there, not only in the ticket.
