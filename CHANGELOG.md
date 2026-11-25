@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `DESIGN.md` §9: three content anti-patterns (invented content, fake success state, plain `1fr` grid
+  tracks), taken from the Hallmark evaluation (MARSTECH-942)
+
 ### Changed
 
 - `DESIGN.md`: "Bootstrap consumers" becomes "Leaving Bootstrap": sol4.space no longer loads Bootstrap and
@@ -13,6 +18,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `marstech.css`: long headings overflowed narrow screens and stray wide content scrolled the page sideways;
+  `h1`-`h3` now wrap (`overflow-wrap: break-word`) and `html`, `body` set `overflow-x: clip`; `.panel`
+  sets `color: var(--fg)` explicitly (MARSTECH-942)
 - `marstech.css`: `:focus-visible` and `.input:focus` set `outline: none`, so the box-shadow focus ring vanished
   in forced-colors mode; they now keep a transparent 2px outline that the mode paints (MLS-271)
 - `fonts.css`: the header comment closed early on `fonts/*/OFL.txt`, so browsers dropped the Oxanium 500

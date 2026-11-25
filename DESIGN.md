@@ -104,3 +104,6 @@ dropped so the outer `--focus-ring` stays visible: square corners while focused 
 - Glow or blur shadows on text.
 - Rounded corners mixed with clipped corners.
 - Low-contrast grey on grey: every text pair must stay at 4.5:1 or more.
+- Invented figures, testimonials or client logos: a mockup stays honest about what is real.
+- A fake "thank you" on a form that sends nothing yet: it says so instead.
+- Grid tracks in plain `1fr` (consuming sites): long content widens the column, use `minmax(0, 1fr)`.
